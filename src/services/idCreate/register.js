@@ -32,15 +32,17 @@ export const registerCitizen = async (data) => {
     city: data.city,
     district: data.district,
     postalCode: data.postalCode,
-    divisionSecretariat: data.divisionSecretariat,
+    divisionalSecretariat: data.divisionalSecretariat, // ✅ corrected spelling
     gramaNiladhariDivision: data.gramaNiladhariDivision,
     province: data.province,
+    date1: data.dateOfBirth,
+    date2: data.dateOfBirth,
+    date3: data.dateOfBirth,
+    deviceType: data.deviceType, // ✅ corrected
     deviceId: data.deviceId,
     os: data.os,
     ipAddress: data.ipAddress,
-    location: data.location,
-    documentTypes: data.documentTypes,
-    documentSides: data.documentSides,
+    location: data.location, // ✅ corrected
   };
 
   const response = await axiosInstance.post(
@@ -48,6 +50,26 @@ export const registerCitizen = async (data) => {
     formData,
     {
       params,
+      paramsSerializer: (params) => {
+        const searchParams = new URLSearchParams();
+        for (const key in params) {
+          if (Array.isArray(params[key])) {
+            params[key].forEach((val) => searchParams.append(key, val));
+          } else {
+            searchParams.append(key, params[key]);
+          }
+        }
+        // add arrays correctly
+        searchParams.append("documentTypes", "NIC");
+        searchParams.append("documentTypes", "NIC");
+        searchParams.append("documentTypes", "birthCertificate");
+        searchParams.append("documentTypes", "birthCertificate");
+        searchParams.append("documentSides", "Front");
+        searchParams.append("documentSides", "Back");
+        searchParams.append("documentSides", "Front");
+        searchParams.append("documentSides", "Back");
+        return searchParams.toString();
+      },
       headers: { "Content-Type": "multipart/form-data" },
     }
   );

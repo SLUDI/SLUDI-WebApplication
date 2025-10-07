@@ -47,6 +47,19 @@ body {
   --breakpoint-3xl: 1920px;
   --breakpoint-4xl: 3840px;
 }
+@keyframes spin-vertical {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(50deg);
+  }
+}
+
+.spin-vertical {
+  animation: spin-vertical 5s linear infinite;
+  transform-style: preserve-3d;
+}
 
 .t-13 {
   font-size: 10px;
