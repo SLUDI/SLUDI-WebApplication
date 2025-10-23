@@ -29,6 +29,7 @@ import LogoSmallImage from "../../assets/images/LogoSmallImage";
 import Mobile from "../../assets/images/mobile";
 import { useNavigate } from "react-router-dom";
 import Login from "../../assets/images/login";
+import Sllogo from "../../assets/images/SLlogo";
 
 const Signin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -169,7 +170,7 @@ const Signin = () => {
           </button>
         </div>
         <div className="flex justify-center items-center">
-          <Login className="w-25 h-25 justify-center items-center" />
+          <Sllogo className="w-25 h-25 justify-center items-center" />
         </div>
 
         <Form className="space-y-6 w-full">
@@ -206,145 +207,6 @@ const Signin = () => {
             {loginType === "Administrator" ? "Admin Panel" : "Dashboard"}
           </button>
         </Form>
-      </div>
-    </div>
-  );
-
-  const ApplyForm = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-      <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 my-8">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-900">
-            Apply for Digital Identity
-          </h3>
-          <button
-            onClick={() => setShowApplyForm(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your full name"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                National ID Number
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter NIC number"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date of Birth
-              </label>
-              <input
-                type="date"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mobile Number
-              </label>
-              <input
-                type="tel"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="+94 XX XXX XXXX"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Address
-            </label>
-            <textarea
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
-              placeholder="Enter your complete address"
-            ></textarea>
-          </div>
-
-          <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center">
-            <div className="space-y-4">
-              <div className="flex justify-center">
-                <Fingerprint className="w-16 h-16 text-blue-500" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900">
-                  Biometric Data Collection
-                </h4>
-                <p className="text-gray-600 text-sm">
-                  Secure fingerprint and facial recognition data will be
-                  collected during in-person verification
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3">
-            <input
-              type="checkbox"
-              className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label className="text-sm text-gray-700">
-              I agree to the{" "}
-              <span className="text-blue-600 hover:underline cursor-pointer">
-                Terms of Service
-              </span>{" "}
-              and{" "}
-              <span className="text-blue-600 hover:underline cursor-pointer">
-                Privacy Policy
-              </span>{" "}
-              for blockchain-based identity management
-            </label>
-          </div>
-
-          <div className="flex space-x-4">
-            <button
-              onClick={() => setShowApplyForm(false)}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() =>
-                alert(
-                  "Application submitted successfully! You will receive a confirmation email shortly."
-                )
-              }
-              className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
-            >
-              Submit Application
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

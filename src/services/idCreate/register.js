@@ -9,14 +9,12 @@ export const registerUser = async (data) => {
 export const registerCitizen = async (data) => {
   const formData = new FormData();
 
-  // append all supporting documents
   if (data.supportingDocuments && data.supportingDocuments.length > 0) {
     data.supportingDocuments.forEach((file) => {
       formData.append("supportingDocuments", file);
     });
   }
 
-  // params (all non-file fields)
   const params = {
     fullName: data.fullName,
     age: data.age,
@@ -30,20 +28,25 @@ export const registerCitizen = async (data) => {
     phone: data.phone,
     street: data.street,
     city: data.city,
-    district: data.district,
+    district: data.selectDistrict,
     postalCode: data.postalCode,
-    divisionalSecretariat: data.divisionalSecretariat, // ✅ corrected spelling
+    divisionalSecretariat: data.divisionalSecretariat,
     gramaNiladhariDivision: data.gramaNiladhariDivision,
     province: data.province,
-    date1: data.dateOfBirth,
-    date2: data.dateOfBirth,
-    date3: data.dateOfBirth,
-    deviceType: data.deviceType, // ✅ corrected
+    selectDate: data.selectDate,
+
+    deviceType: data.deviceType,
     deviceId: data.deviceId,
     os: data.os,
     ipAddress: data.ipAddress,
-    location: data.location, // ✅ corrected
+    location: data.location,
   };
+
+  console.log("🧾 Params to be sent:", params);
+  console.log("📎 Files in FormData:");
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ":", pair[1]);
+  }
 
   const response = await axiosInstance.post(
     endpoints.CITIZEN_REGISTER,
@@ -52,6 +55,7 @@ export const registerCitizen = async (data) => {
       params,
       paramsSerializer: (params) => {
         const searchParams = new URLSearchParams();
+
         for (const key in params) {
           if (Array.isArray(params[key])) {
             params[key].forEach((val) => searchParams.append(key, val));
@@ -59,22 +63,38 @@ export const registerCitizen = async (data) => {
             searchParams.append(key, params[key]);
           }
         }
-        // add arrays correctly
-        searchParams.append("documentTypes", "NIC");
-        searchParams.append("documentTypes", "NIC");
-        searchParams.append("documentTypes", "birthCertificate");
-        searchParams.append("documentTypes", "birthCertificate");
-        searchParams.append("documentSides", "Front");
-        searchParams.append("documentSides", "Back");
-        searchParams.append("documentSides", "Front");
-        searchParams.append("documentSides", "Back");
+
+        const documentTypes = [
+          "NIC",
+          "NIC",
+          "birthCertificate",
+          "birthCertificate",
+        ];
+        const documentSides = ["Front", "Back", "Front", "Back"];
+
+        documentTypes.forEach((type) =>
+          searchParams.append("documentTypes", type)
+        );
+        documentSides.forEach((side) =>
+          searchParams.append("documentSides", side)
+        );
+
         return searchParams.toString();
       },
-      headers: { "Content-Type": "multipart/form-data" },
     }
   );
 
   return response.data;
 };
 
-export default { registerUser, registerCitizen };
+export const dateAvailability = async ({ district, daysAhead = 30 }) => {
+  const response = await axiosInstance.get(`${endpoints.DATE_AVAILABILITY}`, {
+    params: {
+      district,
+      daysAhead,
+    },
+  });
+  return response.data;
+};
+
+export default { registerUser, registerCitizen, dateAvailability };
