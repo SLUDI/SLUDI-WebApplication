@@ -9,6 +9,7 @@ import ReportAnalytic from "../pages/reportAnalitic/reportAnalytic";
 import PersonalDetails from "../pages/personalDetails/personalDetails";
 import AdminPanel from "../pages/AdminiPanel/AdminPanel";
 import DigitalIdentityForm from "../pages/signin/DigitalIdentityForm";
+import DigitalIdentityBookingPage from "../pages/signin/BookingDate";
 
 export default function RouterSet() {
   return (
@@ -29,7 +30,8 @@ export default function RouterSet() {
         <Route path="personalDetails" element={<PersonalDetails />} />
       </Route>
       <Route path="/admin" element={<AdminPanel />} />
-      <Route path="digitalIdentity" element={<DigitalIdentityForm />} />
+      <Route path="digitalIdentity" element={<DigitalIdentityBookingPage />} />
+      <Route path="digitalIdentity/form" element={<DigitalIdentityForm />} />
     </Routes>
   );
 }
