@@ -23,7 +23,10 @@ export default function IdVerification() {
   console.log("idVerificationData", idVerificationData);
 
   // Extract posts from API response
-  const posts = idVerificationData?.data || [];
+  const posts =
+    idVerificationData?.data?.filter(
+      (item) => item.status?.toUpperCase() === "ACTIVE"
+    ) || [];
 
   console.log("idVerificationData", idVerificationData);
 

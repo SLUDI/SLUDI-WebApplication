@@ -4,7 +4,10 @@ import {
   registerCitizen,
   dateAvailability,
 } from "../services/idCreate/register";
-import { idverification } from "../services/idVerification/idVerification";
+import {
+  idverification,
+  appoinmentConfirm,
+} from "../services/idVerification/idVerification";
 
 // Register Mutation
 export const useRegister = () => {
@@ -31,5 +34,11 @@ export const useIdVerification = () => {
 export const useDateAvailability = () => {
   return useMutation({
     mutationFn: dateAvailability,
+  });
+};
+
+export const useAppoinment = () => {
+  return useMutation({
+    mutationFn: appoinmentConfirm,
   });
 };

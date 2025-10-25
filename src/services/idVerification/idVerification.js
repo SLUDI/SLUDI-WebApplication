@@ -6,4 +6,17 @@ export const idverification = async () => {
   return response.data;
 };
 
-export default { idverification };
+// In your API service file
+export const appoinmentConfirm = async ({ userId, documentsValid }) => {
+  const response = await axiosInstance.patch(
+    `${endpoints.APPOINTMENTS}/${userId}/confirm`,
+    null,
+    {
+      params: {
+        documentsValid,
+      },
+    }
+  );
+  return response.data;
+};
+export default { idverification, appoinmentConfirm };
