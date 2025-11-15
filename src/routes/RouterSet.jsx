@@ -10,6 +10,9 @@ import PersonalDetails from "../pages/personalDetails/personalDetails";
 import AdminPanel from "../pages/AdminiPanel/AdminPanel";
 import DigitalIdentityForm from "../pages/signin/DigitalIdentityForm";
 import DigitalIdentityBookingPage from "../pages/signin/BookingDate";
+import Organization from "../pages/Organization/organization";
+import Permission from "../pages/PermissionTemplete/permission";
+import OrganizationManagment from "../pages/OrganizationManagment/organizationManagment";
 
 export default function RouterSet() {
   return (
@@ -28,6 +31,9 @@ export default function RouterSet() {
         <Route path="pending" element={<PendingIds />} />
         <Route path="analatic" element={<ReportAnalytic />} />
         <Route path="personalDetails" element={<PersonalDetails />} />
+        <Route path="organization" element={<Organization />} />
+        <Route path="permission" element={<Permission />} />
+        <Route path="organizationUser" element={<OrganizationManagment />} />
       </Route>
       <Route path="/admin" element={<AdminPanel />} />
       <Route path="digitalIdentity" element={<DigitalIdentityBookingPage />} />

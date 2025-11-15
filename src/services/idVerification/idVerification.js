@@ -8,7 +8,7 @@ export const idverification = async () => {
 
 // In your API service file
 export const appoinmentConfirm = async ({ userId, documentsValid }) => {
-  const response = await axiosInstance.patch(
+  const response = await axiosInstance.post(
     `${endpoints.APPOINTMENTS}/${userId}/confirm`,
     null,
     {

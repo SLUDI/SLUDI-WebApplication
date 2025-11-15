@@ -15,7 +15,6 @@ export default function Step1() {
   const completedSteps = useSelector((state) => state.step.completedSteps);
   const location = useLocation();
 
-  // ✅ Retrieve user data passed via navigate
   const {
     userId,
     fullName,

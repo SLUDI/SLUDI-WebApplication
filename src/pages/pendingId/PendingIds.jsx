@@ -13,7 +13,6 @@ const Text = Typography;
 
 export default function PendingIds() {
   const navigate = useNavigate();
-
   const [verify, setOpenVerify] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const {
@@ -22,17 +21,13 @@ export default function PendingIds() {
     error,
     isLoading,
   } = useIdVerification();
-
   console.log("idVerificationData", idVerificationData);
-
   // Extract posts from API response
   const posts =
     idVerificationData?.data?.filter(
       (item) => item.status?.toUpperCase() === "PENDING"
     ) || [];
-
   console.log("idVerificationData", idVerificationData);
-
   //pagination
   // const itemRender = (_, type, originalElement) => {
   //   if (type === "prev") {
@@ -59,7 +54,6 @@ export default function PendingIds() {
   //   }
   //   return originalElement;
   // };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -67,7 +61,6 @@ export default function PendingIds() {
       </div>
     );
   }
-
   if (isError) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -77,7 +70,6 @@ export default function PendingIds() {
       </div>
     );
   }
-
   return (
     <div className="p-6 max-h-screen">
       <h1 className="text-3xl font-bold text-[#000000] mb-6">Pending IDS</h1>
@@ -95,14 +87,12 @@ export default function PendingIds() {
             }
           />
         </div>
-
         <div>
           <div className="mt-[-8px] ml-4 text-[#000000] font-bold">
             Total Records : 3
           </div>
         </div>
       </div>
-
       <div className="p-6  max-h-screen">
         <div className="w-full  sm:w-full  rounded-xl py-8 px-2 ssm:px-3 sm:px-4 lg:px-8 mt-4 bg-colorSelected gap-4 flex flex-col flex-1 items-center justify-between bg-[#CCCCCC]">
           {!isLoading && (
@@ -138,7 +128,6 @@ export default function PendingIds() {
                       </Text>
                     </Tooltip>
                   </div>
-
                   <div className="col-span-4 h-[40px] flex items-center justify-center p-3">
                     <Tooltip title="Total reached">
                       <Text className="t-13 font-bold pr-[1px] truncate">
@@ -155,7 +144,6 @@ export default function PendingIds() {
                   </div>
                 </div>
               )}
-
               {/* data */}
               {posts?.length > 0 ? (
                 <div
@@ -196,7 +184,6 @@ export default function PendingIds() {
                             </Text>
                           </Tooltip>
                         </div>
-
                         <div className="col-span-4 h-[40px] flex items-center justify-center p-3">
                           <Tooltip title={post?.createdAt}>
                             <Text className="t-13 font-bold pr-[1px] truncate  text-colorDarkDarkGray">
@@ -228,12 +215,9 @@ export default function PendingIds() {
                                   dateofBirth: post?.dateOfBirth,
                                   gender: post?.gender,
                                   age: post?.age,
-
                                   address: post?.address?.street,
-
                                   email: post?.email,
                                   phone: post?.phone,
-
                                   nic: post?.nic,
                                 },
                               });

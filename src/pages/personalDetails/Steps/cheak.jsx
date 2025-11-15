@@ -20,7 +20,6 @@ export default function Step2() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [videoBlob, setVideoBlob] = useState(null);
-  const [extractedEmbedding, setExtractedEmbedding] = useState([]);
 
   const instructions = [
     "Look straight",
@@ -31,23 +30,6 @@ export default function Step2() {
     "Smile slightly",
     "Done! Please wait...",
   ];
-
-  // Store embedding in localStorage
-  const storeEmbeddingInLocalStorage = (embedding) => {
-    try {
-      localStorage.setItem("face_embedding", JSON.stringify(embedding));
-      localStorage.setItem("embedding_timestamp", new Date().toISOString());
-      console.log(
-        "Embedding stored in localStorage:",
-        embedding.length,
-        "dimensions"
-      );
-      message.success("Face features extracted and stored successfully!");
-    } catch (error) {
-      console.error("Error storing embedding in localStorage:", error);
-      message.error("Failed to store face features locally.");
-    }
-  };
 
   // Access webcam
   const startCamera = async () => {
@@ -80,26 +62,17 @@ export default function Step2() {
       );
 
       if (!response.ok) {
-        setInstruction("Error video processing again capture");
+        setInstruction("Error video processign again capture");
         throw new Error(`Upload failed with status: ${response.status}`);
       } else {
-        setInstruction("Successfully Processed! Go to next step or recapture");
+        setInstruction("Sucessfuly Process go to next step or recapture");
       }
 
       const result = await response.json();
       console.log("Upload successful:", result);
 
-      // Extract and store the embedding
-      if (result.embedding && Array.isArray(result.embedding)) {
-        setExtractedEmbedding(result.embedding);
-        storeEmbeddingInLocalStorage(result.embedding);
-      } else {
-        console.warn("No embedding found in response:", result);
-        message.warning("No face features extracted. Please try again.");
-      }
-
       setUploadSuccess(true);
-      message.success("Video uploaded and features extracted successfully!");
+      message.success("Video uploaded successfully!");
 
       // Hide video and show success message
       if (videoRef.current) {
@@ -132,7 +105,6 @@ export default function Step2() {
   // Start recording and show instructions
   const startRecording = async () => {
     setUploadSuccess(false);
-    setExtractedEmbedding([]);
     const stream = await startCamera();
     if (!stream) return;
 
@@ -175,66 +147,30 @@ export default function Step2() {
   const resetCapture = () => {
     setUploadSuccess(false);
     setVideoBlob(null);
-    setExtractedEmbedding([]);
     setInstruction("Get ready...");
     setProgress(0);
-
-    // Clear stored embedding
-    localStorage.removeItem("face_embedding");
-    localStorage.removeItem("embedding_timestamp");
 
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
   };
 
-  // Check if embedding exists in localStorage on component mount
-  React.useEffect(() => {
-    const storedEmbedding = localStorage.getItem("face_embedding");
-    if (storedEmbedding) {
-      try {
-        const embedding = JSON.parse(storedEmbedding);
-        setExtractedEmbedding(embedding);
-        setUploadSuccess(true);
-        setInstruction(
-          "Features already extracted. You can recapture or proceed."
-        );
-      } catch (error) {
-        console.error("Error parsing stored embedding:", error);
-      }
-    }
-  }, []);
-
   return (
     <div className="w-2/3 bg-[#ffffff] p-6 mt-10 ">
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800 mt-4">
-          Face Capture & Feature Extraction
+          Face Capture
         </h2>
 
         {uploadSuccess ? (
           <div className="flex flex-col items-center justify-center w-100 h-80 rounded-xl shadow-lg border border-gray-300 bg-green-50">
             <FcOk className="text-6xl mb-4" />
             <p className="text-xl font-semibold text-green-600">
-              Features Extracted Successfully!
+              Video Uploaded Successfully!
             </p>
             <p className="text-gray-600 mt-2">
-              {extractedEmbedding.length > 0
-                ? `Embedding stored: ${extractedEmbedding.length} dimensions`
-                : "Face features processed and stored"}
+              Your face capture has been processed.
             </p>
-            {extractedEmbedding.length > 0 && (
-              <div className="mt-2 p-2 bg-gray-100 rounded text-xs max-w-full overflow-hidden">
-                <p className="truncate">
-                  Sample: [
-                  {extractedEmbedding
-                    .slice(0, 3)
-                    .map((num) => num.toFixed(4))
-                    .join(", ")}
-                  ...]
-                </p>
-              </div>
-            )}
           </div>
         ) : (
           <video

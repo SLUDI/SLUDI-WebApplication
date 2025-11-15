@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getLocalStorageData } from "../utils/localStorageHelper";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -6,15 +7,16 @@ const axiosInstance = axios.create({
   baseURL: baseUrl,
   //timeout: 30000, // 30 seconds timeout
   headers: {
-    "ngrok-skip-browser-warning": "true",
-    type: "web",
+    //"ngrok-skip-browser-warning": "true",
+    //type: "web",
   },
 });
 
 // ✅ Optional: interceptors for token handling
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getLocalStorageData("token");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

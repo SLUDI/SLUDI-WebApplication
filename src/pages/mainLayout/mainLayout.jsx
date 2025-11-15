@@ -1,6 +1,6 @@
 import { Button, Menu, Tooltip } from "antd";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom"; // <-- added useLocation
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdOutlineDashboard, MdOutlinePendingActions } from "react-icons/md";
 import { LuBookUser } from "react-icons/lu";
@@ -9,17 +9,26 @@ import { TbReportAnalytics } from "react-icons/tb";
 import { FiSettings } from "react-icons/fi";
 import MainHeader from "./header/MainHeader";
 import LogoSmallImage from "../../assets/images/LogoSmallImage";
+import { useSelector } from "react-redux";
 
 export default function MainLayout() {
-  //states
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [selecteKey, setSelectKey] = useState("1");
   const [containerHeight, setContainerHeight] = useState(
     window.innerHeight - 80
   );
 
+  // 👇 Example role (you can later set this dynamically after login)
+  //const [role, setRole] = useState("SuperAdmin"); // or "Admin"
+
+  const role = useSelector((state) => state.role.role);
+  const organizationId = useSelector((state) => state.auth.organizationId);
+  const roleCode = useSelector((state) => state.auth.roleCode);
+  console.log(role);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleCollapsed = () => {
     if (window.innerWidth > 768) {
@@ -29,8 +38,7 @@ export default function MainLayout() {
     }
   };
 
-  //item list********************************************
-
+  // --- item lists ---
   const items = [
     {
       key: "1",
@@ -51,7 +59,7 @@ export default function MainLayout() {
     },
     {
       key: "2",
-      label: "User Mangement",
+      label: "User Management",
       icon: (
         <LuBookUser
           className={`w-[32px] h-[32px] rounded-full p-1 ${
@@ -64,7 +72,7 @@ export default function MainLayout() {
           }
         />
       ),
-      route: "/usermangemnt",
+      route: "/usermangement",
     },
     {
       key: "3",
@@ -80,7 +88,7 @@ export default function MainLayout() {
           }
         />
       ),
-      label: "ID verification",
+      label: "ID Verification",
       route: "/idverification",
     },
     {
@@ -100,46 +108,103 @@ export default function MainLayout() {
       ),
       route: "/pending",
     },
+    // {
+    //   key: "5",
+    //   label: "Reports & Analytics",
+    //   icon: (
+    //     <TbReportAnalytics
+    //       className={`w-[32px] h-[32px] rounded-full p-1 ${
+    //         selecteKey === "5" ? "bg-colorTextSelected" : "bg-transparent"
+    //       }`}
+    //       color={
+    //         selecteKey === "5"
+    //           ? "var(--color-selected)"
+    //           : "var(--color-non-selected)"
+    //       }
+    //     />
+    //   ),
+    //   route: "/analytics",
+    // },
+    // {
+    //   key: "6",
+    //   label: "Settings",
+    //   icon: (
+    //     <FiSettings
+    //       className={`w-[32px] h-[32px] rounded-full p-1 ${
+    //         selecteKey === "6" ? "bg-colorTextSelected" : "bg-transparent"
+    //       }`}
+    //       color={
+    //         selecteKey === "6"
+    //           ? "var(--color-selected)"
+    //           : "var(--color-non-selected)"
+    //       }
+    //     />
+    //   ),
+    //   route: "#",
+    // },
     {
       key: "5",
-      label: "Reports & Analytics",
       icon: (
-        <TbReportAnalytics
+        <LuBookUser
           className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "5" ? "bg-colorTextSelected" : "bg-transparent"
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
           }`}
           color={
-            selecteKey === "5"
+            selecteKey === "1"
               ? "var(--color-selected)"
               : "var(--color-non-selected)"
           }
         />
       ),
-      route: "/analatic",
+      label: "Organization",
+      route: "/organization",
     },
     {
       key: "6",
-      label: "Settings",
+      label: "Permission Template",
       icon: (
-        <FiSettings
+        <TbReportAnalytics
           className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "6" ? "bg-colorTextSelected" : "bg-transparent"
+            selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
           }`}
           color={
-            selecteKey === "6"
+            selecteKey === "2"
               ? "var(--color-selected)"
               : "var(--color-non-selected)"
           }
         />
       ),
-      route: "#",
+      route: "/permission",
     },
   ];
 
-  //sidebar handling functions
+  const adminitems = [
+    {
+      key: "1",
+      icon: (
+        <LuBookUser
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "User Managment",
+      route: "/organizationUser",
+    },
+  ];
+
+  // 👇 Select which items to show based on role
+  const menuItems =
+    organizationId === 1 && roleCode === "ADMIN" ? items : adminitems;
+
+  // Sidebar handling
   useEffect(() => {
-    // Update selecteKey based on current route
-    const matchedItem = items
+    const matchedItem = menuItems
       .flatMap((item) => (item.children ? [item, ...item.children] : item))
       .find((item) => location.pathname.includes(item.route));
 
@@ -148,15 +213,12 @@ export default function MainLayout() {
     } else {
       setSelectKey(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, menuItems]);
 
-  //navigate to desired route
   const handleMenuClick = (val) => {
     setSelectKey(val.key);
 
-    const selectedItem = items
-      .flatMap((item) => (item.children ? [item, ...item.children] : item))
-      .find((item) => item.key === val.key);
+    const selectedItem = menuItems.find((item) => item.key === val.key);
     if (selectedItem) {
       navigate(selectedItem.route);
     }
@@ -172,16 +234,14 @@ export default function MainLayout() {
   }, []);
 
   return (
-    <div
-      className={`w-full max-w-screen min-h-screen h-full flex items-center justify-start overflow-hidden `}
-    >
+    <div className="w-full max-w-screen min-h-screen h-full flex items-center justify-start overflow-hidden">
       <div
         className={`${
           collapsed ? "w-[82px]" : "w-[270px]"
         } min-h-dvh bg-colorSelected border-r-[2px] shadow-md relative transition-all duration-300 ease-in-out z-10`}
       >
         <div
-          className={`flex flex-col items-center justify-center gap-1  ${
+          className={`flex flex-col items-center justify-center gap-1 ${
             collapsed ? "my-4" : "mt-6 mb-0"
           }`}
         >
@@ -196,40 +256,34 @@ export default function MainLayout() {
           <Button
             shape="circle"
             icon={collapsed ? <IoIosArrowForward /> : <IoIosArrowBack />}
-            className=" -mr-4"
+            className="-mr-4"
             onClick={toggleCollapsed}
           />
         </div>
 
+        {/* 👇 show items based on role */}
         <Menu
-          className="font-medium [&_.ant-menu-item-selected]:!bg-[#F1F5F9]   "
-          // defaultSelectedKeys={["1"]}
+          className="font-medium [&_.ant-menu-item-selected]:!bg-[#F1F5F9]"
           selectedKeys={[selecteKey]}
           onSelect={handleMenuClick}
           mode="inline"
-          // theme="dark"
           inlineCollapsed={collapsed}
-          items={items}
+          items={menuItems}
         />
       </div>
 
-      {/* home right section */}
-      <div className="w-full min-w-0 min-h-dvh max-h-dvh bg-colorBackground flex-1 flex-col justify-start items-center  ">
+      {/* main right side */}
+      <div className="w-full min-w-0 min-h-dvh max-h-dvh bg-colorBackground flex-1 flex-col justify-start items-center">
         <MainHeader
           openPopover={openUserMenu}
-          onOpenChange={() => {
-            setOpenUserMenu(!openUserMenu);
-          }}
+          onOpenChange={() => setOpenUserMenu(!openUserMenu)}
         />
 
         <div
-          className=" w-full flex flex-col items-center justify-start px-2 pb-2 overflow-auto scroll bg-[#F1F5F9] "
-          style={{
-            minHeight: containerHeight,
-            maxHeight: containerHeight,
-          }}
+          className="w-full flex flex-col items-center justify-start px-2 pb-2 overflow-auto scroll bg-[#F1F5F9]"
+          style={{ minHeight: containerHeight, maxHeight: containerHeight }}
         >
-          <div className="w-full flex-col items-center justify-start sm:w-[90%] lg:w-[95%] ">
+          <div className="w-full flex-col items-center justify-start sm:w-[90%] lg:w-[95%]">
             <Outlet />
           </div>
         </div>
