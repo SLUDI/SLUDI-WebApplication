@@ -13,6 +13,10 @@ import DigitalIdentityBookingPage from "../pages/signin/BookingDate";
 import Organization from "../pages/Organization/organization";
 import Permission from "../pages/PermissionTemplete/permission";
 import OrganizationManagment from "../pages/OrganizationManagment/organizationManagment";
+import DrivingLicenseRequest from "../pages/InitialReqqust/drivingLicenseRequest";
+import LicenseIssuanceForm from "../pages/InitialReqqust/LicenseIssuanceForm";
+import PendingRequest from "../pages/InitialReqqust/pendingRequest";
+import IssuedLicense from "../pages/InitialReqqust/issuedLicense";
 
 export default function RouterSet() {
   return (
@@ -34,6 +38,10 @@ export default function RouterSet() {
         <Route path="organization" element={<Organization />} />
         <Route path="permission" element={<Permission />} />
         <Route path="organizationUser" element={<OrganizationManagment />} />
+        <Route path="licenseReqqust" element={<DrivingLicenseRequest />} />
+        <Route path="licenseIssue" element={<LicenseIssuanceForm />} />
+        <Route path="pendingIssue" element={<PendingRequest />} />
+        <Route path="issuedLicenses" element={<IssuedLicense />} />
       </Route>
       <Route path="/admin" element={<AdminPanel />} />
       <Route path="digitalIdentity" element={<DigitalIdentityBookingPage />} />

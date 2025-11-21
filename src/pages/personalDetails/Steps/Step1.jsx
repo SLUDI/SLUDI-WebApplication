@@ -39,30 +39,32 @@ export default function Step1() {
   const { mutate, isPending } = useRegister();
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-    const payload = {
-      nic: values.nicNumber,
-      deviceInfo: {
-        deviceId: "web-frontend",
-        deviceType: "browser",
-        os: window.navigator.platform,
-        ipAddress: "0.0.0.0",
-        location: "",
-      },
-    };
+    dispatch(setCurrentStep(currentStep + 1));
+    dispatch(setCompletedSteps(completedSteps + 1));
+    // console.log("Received values of form: ", values);
+    // const payload = {
+    //   nic: values.nicNumber,
+    //   deviceInfo: {
+    //     deviceId: "web-frontend",
+    //     deviceType: "browser",
+    //     os: window.navigator.platform,
+    //     ipAddress: "0.0.0.0",
+    //     location: "",
+    //   },
+    // };
 
-    mutate(payload, {
-      onSuccess: (res) => {
-        message.success(
-          res.response?.data?.message || "Registration successful!"
-        );
-        dispatch(setCurrentStep(currentStep + 1));
-        dispatch(setCompletedSteps(completedSteps + 1));
-      },
-      onError: (err) => {
-        message.error(err.response?.data?.message || "Registration failed");
-      },
-    });
+    // mutate(payload, {
+    //   onSuccess: (res) => {
+    //     message.success(
+    //       res.response?.data?.message || "Registration successful!"
+    //     );
+    //     dispatch(setCurrentStep(currentStep + 1));
+    //     dispatch(setCompletedSteps(completedSteps + 1));
+    //   },
+    //   onError: (err) => {
+    //     message.error(err.response?.data?.message || "Registration failed");
+    //   },
+    // });
   };
 
   return (

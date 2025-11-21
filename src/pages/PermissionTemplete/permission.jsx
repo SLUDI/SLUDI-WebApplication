@@ -1,51 +1,70 @@
-import { Button, Input, Tooltip, Typography } from "antd";
+import { Button, Input, Spin, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import MainButton from "../../components/baseComponents/button/MainButton";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import Create from "./features/Create";
+import { useAllTemplate } from "../../hooks/organization";
+import NoPostImg from "../../assets/images/NoPostImg";
+import ViewTemplate from "./features/ViewTemplate";
 const { Search } = Input;
 const Text = Typography;
-const posts = [
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 1,
-  },
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 2,
-  },
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 3,
-  },
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 4,
-  },
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 5,
-  },
-  {
-    id: "0001",
-    sector: "Security",
-    type: "Government",
-    email: 6,
-  },
-];
+// const posts = [
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 1,
+//   },
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 2,
+//   },
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 3,
+//   },
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 4,
+//   },
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 5,
+//   },
+//   {
+//     id: "0001",
+//     sector: "Security",
+//     type: "Government",
+//     email: 6,
+//   },
+// ];
 const Permission = () => {
-  const [isLoading, setLoading] = useState(false);
+  // const [isLoading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  const { data: organizationTemplateData, isLoading } = useAllTemplate();
+
+  const posts = organizationTemplateData?.data;
+
+  console.log(posts);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -79,7 +98,7 @@ const Permission = () => {
           </div>
           <div>
             <div className="mt-[-8px] ml-4 text-[#000000] font-bold">
-              Total Records : 3
+              Total Records : {posts?.length}
             </div>
           </div>
         </div>
@@ -141,84 +160,76 @@ const Permission = () => {
                           className="w-full grid grid-cols-24  pt-1  bg-white rounded-xl   "
                         >
                           <div className="col-span-4 flex items-center justify-start p-3 h-[40px]">
-                            <Tooltip title={post?.id}>
+                            <Tooltip title={post?.templateCode}>
                               <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                                {post?.id}
+                                {post?.templateCode}
                               </Text>
                             </Tooltip>
                           </div>
                           <div className="col-span-4 h-[40px] flex items-center justify-start p-3">
-                            <Tooltip title={post?.sector}>
+                            <Tooltip title={post?.name}>
                               <Text className="t-13 font-bold pr-[1px] truncate  text-colorDarkDarkGray">
-                                {post?.sector}
+                                {post?.name}
                               </Text>
                             </Tooltip>
                           </div>
                           <div className="col-span-4 h-[40px] flex items-center justify-start p-3">
-                            <Tooltip title={post?.type}>
+                            <Tooltip title={post?.category}>
                               <Text className="t-13 font-bold pr-[1px] truncate  text-colorDarkDarkGray">
-                                {post?.type}
+                                {post?.category}
                               </Text>
                             </Tooltip>
                           </div>
                           <div className="col-span-6  h-[40px] flex items-center justify-start p-3">
-                            <Tooltip title={post?.email}>
+                            <Tooltip title={post?.predefinedRoles?.length}>
                               <Text className="t-13 font-bold pr-[1px] truncate  text-colorDarkDarkGray">
-                                {post?.email}
+                                {post?.predefinedRoles?.length}
                               </Text>
                             </Tooltip>
                           </div>
 
                           <div className="col-span-6 h-[45px] flex items-center justify-center p-3 rounded-tr-lg gap-4">
                             {/* <MainButton
-                            buttonText={"Register"}
-                            height={"30px"}
-                            width={"20%"}
-                            minWidth="63px"
-                            type="primary"
-                            color="#ffffff"
-                            paddingY="2px"
-                            htmlType={"submit"}
-                            // onClick={() => {
-                            //   navigate("/personalDetails");
-                            // }}
-                            // onClick={() => {
-                            //   navigate(`/personalDetails/${post?.userId}`); // or post?.userId depending on API
-                            // }}
-                          />
-                          <MainButton
-                            buttonText={"Register"}
-                            height={"30px"}
-                            width={"20%"}
-                            minWidth="63px"
-                            type="primary"
-                            color="#ffffff"
-                            paddingY="2px"
-                            htmlType={"submit"}
-                            // onClick={() => {
-                            //   navigate("/personalDetails");
-                            // }}
-                            // onClick={() => {
-                            //   navigate(`/personalDetails/${post?.userId}`); // or post?.userId depending on API
-                            // }}
-                          /> */}
+                              buttonText={"Register"}
+                              height={"30px"}
+                              width={"20%"}
+                              minWidth="63px"
+                              type="primary"
+                              color="#ffffff"
+                              paddingY="2px"
+                              htmlType={"submit"}
+                              // onClick={() => {
+                              //   navigate("/personalDetails");
+                              // }}
+                              // onClick={() => {
+                              //   navigate(`/personalDetails/${post?.userId}`); // or post?.userId depending on API
+                              // }}
+                            />
+                            <MainButton
+                              buttonText={"Register"}
+                              height={"30px"}
+                              width={"20%"}
+                              minWidth="63px"
+                              type="primary"
+                              color="#ffffff"
+                              paddingY="2px"
+                              htmlType={"submit"}
+                              // onClick={() => {
+                              //   navigate("/personalDetails");
+                              // }}
+                              // onClick={() => {
+                              //   navigate(`/personalDetails/${post?.userId}`); // or post?.userId depending on API
+                              // }}
+                            /> */}
                             <Button
                               className="text-gray-700 hover:text-cyan-600 transition duration-200"
                               title="View"
+                              onClick={() => {
+                                setSelectedTemplate(post);
+                                setViewOpen(true);
+                              }}
                             >
                               <Eye size={20} />
-                            </Button>
-                            <Button
-                              className="text-gray-700 hover:text-red-600 transition duration-200"
-                              title="Delete"
-                            >
-                              <Trash2 size={20} />
-                            </Button>
-                            <Button
-                              className="text-gray-700 hover:text-blue-600 transition duration-200"
-                              title="Edit"
-                            >
-                              <Edit size={20} />
                             </Button>
                           </div>
                         </div>
@@ -247,6 +258,16 @@ const Permission = () => {
           open={open}
           onCancel={() => {
             setOpen(false);
+          }}
+        />
+      )}
+      {viewOpen && (
+        <ViewTemplate
+          open={viewOpen}
+          data={selectedTemplate}
+          onCancel={() => {
+            setViewOpen(false);
+            setSelectedTemplate(null);
           }}
         />
       )}

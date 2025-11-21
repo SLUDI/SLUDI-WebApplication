@@ -11,7 +11,6 @@ import {
   MoreVertical,
 } from "lucide-react";
 import Create from "./features/Create";
-import { useAllOrganization } from "../../hooks/organization";
 import {
   useAllOrganizationUsers,
   useApproveUser,

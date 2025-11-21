@@ -1,10 +1,10 @@
 import { Modal, Form, Input, Select, Button, message } from "antd";
 import React from "react";
-import { organizationCreate } from "../../../hooks/organization";
+import { useOrganizationCreate } from "../../../hooks/organization";
 
 export default function Create({ open, onCancel }) {
   const [form] = Form.useForm();
-  const { mutate, isPending } = organizationCreate();
+  const { mutate, isPending } = useOrganizationCreate();
 
   const handleSubmit = (values) => {
     console.log("Form values:", values);
@@ -119,10 +119,10 @@ export default function Create({ open, onCancel }) {
                 placeholder="Dropdown Field Data"
                 size="large"
                 options={[
-                  { value: "financial", label: "Financial" },
-                  { value: "private", label: "Private" },
+                  { value: "FINANCIAL", label: "Financial" },
+                  { value: "PRIVATE", label: "Private" },
                   { value: "GOVERNMENT", label: "Government" },
-                  { value: "ngo", label: "NGO" },
+                  { value: "NGO", label: "NGO" },
                 ]}
               />
             </Form.Item>

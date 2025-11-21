@@ -7,12 +7,21 @@ const endpoints = {
   CREATE_ORGANIZATION: "/api/organization/create-organization",
   GET_ALL_ORGANIZATION: "/api/organization/",
   CREATE_TEMPLATE: "/api/permission-templates/create",
+  GEt_ALL_TEMPLATE: "/api/permission-templates/get-all",
   LOGIN: "/api/organization-users/auth/login",
   CREATE_ORGANIZATION_USER: "/api/organization-users/register",
   ORGNIZATION_ROLE: "/api/organization-users/organization",
   GET_ALL_ORGANIZATION_USERS: "/api/organization-users/organization",
   ORGNIZATION_COUNT: "/api/organization-users/organization",
   ORGNIZATION_USER: "/api/organization-users",
+  ORGNIZATION_ORG: "/api/organization",
+  LICENSE_ISSUED: "/api/vc/driving-license/request",
+  LICENSE_STATUS: "/api/vc/driving-license/status",
+  LICENSE_VEHICLE_CATEGORIES: "/api/vc/driving-license/vehicle-categories",
+  LICENSE_CREATE: "/api/vc/driving-license/credential",
+  GET_ALL_LICENSES: "/api/vc/driving-license/request/all",
+  SAVE_BIOMETRIC_DATA: "/api/citizen-user/save-biometric",
+  CREDENTIAL: "/api/vc/identity/credential",
 };
 
 export default endpoints;

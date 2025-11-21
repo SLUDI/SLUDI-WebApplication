@@ -35,7 +35,9 @@ import { setRole } from "../../redux/loginSlice";
 import { authLogin } from "../../hooks/auth";
 import {
   setData,
+  setExpiresIn,
   setOrganizationId,
+  setRefreshToken,
   setRoleCode,
   setToken,
 } from "../../redux/authSlice";
@@ -174,19 +176,31 @@ const Signin = () => {
     mutate(values, {
       onSuccess: (res) => {
         message.success("Organization created successfully!");
+
+        // expiresIn is already in milliseconds (e.g., 3600000ms = 1 hour)
+        // Calculate token expiry time (current time + expiresIn milliseconds)
+        const expiryTime = Date.now() + res?.data?.expiresIn;
+
+        console.log("Token expires in:", res?.data?.expiresIn, "ms");
+        console.log("Token expiry timestamp:", expiryTime);
+
         dispatch(setRoleCode(res?.data?.roleCode));
         dispatch(setToken(res?.data?.accessToken));
         dispatch(setOrganizationId(res?.data?.organizationId));
         dispatch(setData(res?.data));
+        dispatch(setRefreshToken(res?.data?.refreshToken));
+        dispatch(setExpiresIn(res?.data?.expiresIn));
 
         // Securely store token and user info
         setLocalStorageData("token", res?.data?.accessToken);
         setLocalStorageData("organizationId", res?.data?.organizationId);
         setLocalStorageData("roleCode", res?.data?.roleCode);
         setLocalStorageData("data", res?.data);
+        setLocalStorageData("refreshToken", res?.data?.refreshToken);
+        setLocalStorageData("expiresIn", res?.data?.expiresIn);
+        setLocalStorageData("tokenExpiryTime", expiryTime);
 
         // Navigate after storing
-
         if (
           res?.data?.roleCode === "ADMIN" &&
           res?.data?.organizationId === 1

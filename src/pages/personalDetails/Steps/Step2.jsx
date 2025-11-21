@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
 import MainButton from "../../../components/baseComponents/button/MainButton";
 import { FcOk } from "react-icons/fc";
+import { useLocation } from "react-router-dom";
 
 export default function Step2() {
   const dispatch = useDispatch();
   const currentStep = useSelector((state) => state.step.currentStep);
   const completedSteps = useSelector((state) => state.step.completedSteps);
+  const location = useLocation();
+  const { userId } = location.state || {};
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);

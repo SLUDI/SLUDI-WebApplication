@@ -48,13 +48,13 @@ export const approveOrganizationUser = async (userId) => {
 // Suspend user
 export const suspendOrganizationUser = async (userId, reason) => {
   return axiosInstance.post(
-    `/organization-users/${userId}/suspend?reason=${reason}`
+    `api/organization-users/${userId}/suspend?reason=${reason}`
   );
 };
 
 // Reactivate user
 export const reactivateOrganizationUser = async (userId) => {
-  return axiosInstance.post(`/organization-users/${userId}/reactivate`);
+  return axiosInstance.post(`api/organization-users/${userId}/reactivate`);
 };
 
 export default {

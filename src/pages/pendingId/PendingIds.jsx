@@ -25,7 +25,7 @@ export default function PendingIds() {
   // Extract posts from API response
   const posts =
     idVerificationData?.data?.filter(
-      (item) => item.status?.toUpperCase() === "PENDING"
+      (item) => item.kycStatus?.toUpperCase() === "IN_PROGRESS"
     ) || [];
   console.log("idVerificationData", idVerificationData);
   //pagination

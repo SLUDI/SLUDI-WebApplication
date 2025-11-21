@@ -3,6 +3,8 @@ import {
   registerUser,
   registerCitizen,
   dateAvailability,
+  saveBiometricData,
+  generateCredential,
 } from "../services/idCreate/register";
 import {
   idverification,
@@ -42,3 +44,30 @@ export const useAppoinment = () => {
     mutationFn: appoinmentConfirm,
   });
 };
+
+export const useSaveBiometricData = () => {
+  return useMutation({
+    mutationFn: saveBiometricData,
+  });
+};
+
+export const useGenerateCredential = () => {
+  return useMutation({
+    mutationFn: (did) => generateCredential(did),
+  });
+};
+
+// export const useApproveUser = () => {
+//   const qc = useQueryClient();
+//   return useMutation({
+//     mutationFn: (userId) => approveOrganizationUser(userId),
+//     onSuccess: () => qc.invalidateQueries(["organizationUser"]),
+//   });
+// };
+
+// //aprove
+// export const useApproveUser = () => {
+//   return useMutation({
+//     mutationFn: (did) => generateCredential(did),
+//   });
+// };

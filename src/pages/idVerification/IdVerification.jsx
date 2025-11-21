@@ -25,7 +25,7 @@ export default function IdVerification() {
   // Extract posts from API response
   const posts =
     idVerificationData?.data?.filter(
-      (item) => item.status?.toUpperCase() === "ACTIVE"
+      (item) => item.kycStatus?.toUpperCase() === "NOT_STARTED"
     ) || [];
 
   console.log("idVerificationData", idVerificationData);

@@ -3,13 +3,20 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom"; // <-- added useLocation
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdOutlineDashboard, MdOutlinePendingActions } from "react-icons/md";
+import { TbLicense } from "react-icons/tb";
+import { BsQrCodeScan } from "react-icons/bs";
 import { LuBookUser } from "react-icons/lu";
 import { BiIdCard } from "react-icons/bi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiSettings } from "react-icons/fi";
 import MainHeader from "./header/MainHeader";
 import LogoSmallImage from "../../assets/images/LogoSmallImage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RiPassPendingLine } from "react-icons/ri";
+import { MdOutlineLibraryBooks } from "react-icons/md";
+import MainButton from "../../components/baseComponents/button/MainButton";
+import { CiLogout } from "react-icons/ci";
+import { logOut } from "../../redux/authSlice";
 
 export default function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -29,6 +36,7 @@ export default function MainLayout() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const toggleCollapsed = () => {
     if (window.innerWidth > 768) {
@@ -196,11 +204,121 @@ export default function MainLayout() {
       label: "User Managment",
       route: "/organizationUser",
     },
+    {
+      key: "5",
+      icon: (
+        <MdOutlineLibraryBooks
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Issued License",
+      route: "/issuedLicenses",
+    },
+    {
+      key: "2",
+      icon: (
+        <BsQrCodeScan
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Initiate Request",
+      route: "/licenseReqqust",
+    },
+
+    {
+      key: "4",
+      icon: (
+        <RiPassPendingLine
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Pending Reqest",
+      route: "/pendingIssue",
+    },
   ];
 
-  // 👇 Select which items to show based on role
+  const useritems = [
+    {
+      key: "4",
+      icon: (
+        <MdOutlineLibraryBooks
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Issued License",
+      route: "/issuedLicenses",
+    },
+    {
+      key: "1",
+      icon: (
+        <BsQrCodeScan
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Initiate Request",
+      route: "/licenseReqqust",
+    },
+
+    {
+      key: "3",
+      icon: (
+        <RiPassPendingLine
+          className={`w-[32px] h-[32px] rounded-full p-1 ${
+            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          }`}
+          color={
+            selecteKey === "1"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Pending Reqest",
+      route: "/pendingIssue",
+    },
+  ];
+
   const menuItems =
-    organizationId === 1 && roleCode === "ADMIN" ? items : adminitems;
+    organizationId === 1 && roleCode === "ADMIN"
+      ? items
+      : organizationId !== 1 && roleCode === "ADMIN"
+      ? adminitems
+      : useritems;
 
   // Sidebar handling
   useEffect(() => {
@@ -222,6 +340,10 @@ export default function MainLayout() {
     if (selectedItem) {
       navigate(selectedItem.route);
     }
+  };
+
+  const handleLogout = async () => {
+    dispatch(logOut());
   };
 
   useEffect(() => {
@@ -270,6 +392,34 @@ export default function MainLayout() {
           inlineCollapsed={collapsed}
           items={menuItems}
         />
+
+        <div className="h-[30px] flex items-center justify-center absolute bottom-20 w-full">
+          {/* <MainButton
+            buttonText="Logout"
+            height="35px"
+            width="50%"
+            minWidth="120px"
+            type="primary"
+            color="#ffffff"
+            paddingY="6px"
+            icon={<CiLogout size={18} />}
+            onClick={handleLogout}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+            }}
+          /> */}
+
+          <div
+            className="flex items-center justify-center gap-2 cursor-pointer py-2 px-4 text-black border border-gray-300 rounded-lg absolute bottom-20"
+            onClick={handleLogout}
+          >
+            <CiLogout size={20} />
+            {collapsed ? true : <span>Logout</span>}
+          </div>
+        </div>
       </div>
 
       {/* main right side */}

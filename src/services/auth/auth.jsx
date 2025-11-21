@@ -6,4 +6,12 @@ export const login = async (data) => {
   return response.data;
 };
 
-export default { login };
+export const refreshToken = async (refreshToken) => {
+  const response = await axiosInstance.post(
+    "/api/organization-users/auth/refresh",
+    { refreshToken }
+  );
+  return response.data;
+};
+
+export default { login, refreshToken };

@@ -1,12 +1,16 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   creteOrganization,
   allOrganization,
   createTemplate,
+  allTemplate,
+  approveOrganizationOrg,
+  suspendOrganizationOrg,
+  reactivateOrganizationOrg,
 } from "../services/organization/organization";
 
 // Register Mutation
-export const organizationCreate = () => {
+export const useOrganizationCreate = () => {
   return useMutation({
     mutationFn: creteOrganization,
   });
@@ -19,8 +23,44 @@ export const useAllOrganization = () => {
   });
 };
 
-export const templateCreate = () => {
+export const useTemplateCreate = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createTemplate,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["organizationTemplate"]);
+    },
+  });
+};
+
+export const useAllTemplate = () => {
+  return useQuery({
+    queryKey: ["organizationTemplate"],
+    queryFn: allTemplate,
+  });
+};
+
+//aprove
+export const useApproveOrg = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (userId) => approveOrganizationOrg(userId),
+    onSuccess: () => qc.invalidateQueries(["organization"]),
+  });
+};
+
+export const useSuspendOrg = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, reason }) => suspendOrganizationOrg(userId, reason),
+    onSuccess: () => qc.invalidateQueries(["organization"]),
+  });
+};
+
+export const useReactivateOrg = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (userId) => reactivateOrganizationOrg(userId),
+    onSuccess: () => qc.invalidateQueries(["organization"]),
   });
 };

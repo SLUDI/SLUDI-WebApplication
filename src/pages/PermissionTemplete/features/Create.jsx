@@ -1,73 +1,51 @@
 import { Modal, Form, Input, Select, Button, Switch } from "antd";
 import React, { useState } from "react";
-import { templateCreate } from "../../../hooks/organization";
+import { useTemplateCreate } from "../../../hooks/organization";
 
 const { TextArea } = Input;
 
 export default function Create({ open, onCancel }) {
   const [form] = Form.useForm();
   const [userRoles, setUserRoles] = useState([
-    { role: "", permissions: [], isAdmin: false },
+    { role: "", permissions: [], isAdmin: false, description: "" },
   ]);
 
-  const { mutate, isPending } = templateCreate();
+  const { mutate, isPending } = useTemplateCreate();
 
   const roleOptions = [
-    { value: "administrator", label: "Administrator" },
-    { value: "auditor", label: "Auditor" },
-    { value: "viewer", label: "Viewer" },
+    { value: "admin", label: "Admin" },
+    { value: "officer", label: "Officer" },
+    { value: "inspector", label: "Inspector" },
+    { value: "data_entry", label: "DataEntry" },
   ];
 
-  const permissionsByRole = {
-    administrator: [
-      { value: "audit:view", label: "audit:view" },
-      { value: "audit:create", label: "audit:create" },
-      { value: "audit:delete", label: "audit:delete" },
-      { value: "user:view", label: "user:view" },
-      { value: "user:create", label: "user:create" },
-      { value: "user:edit", label: "user:edit" },
-      { value: "report:view", label: "report:view" },
-      { value: "report:generate", label: "report:generate" },
-      { value: "document:view", label: "document:view" },
-      { value: "document:create", label: "document:create" },
-    ],
-    auditor: [
-      { value: "audit:view", label: "audit:view" },
-      { value: "audit:create", label: "audit:create" },
-      { value: "audit:delete", label: "audit:delete" },
-      { value: "user:view", label: "user:view" },
-      { value: "user:create", label: "user:create" },
-      { value: "user:edit", label: "user:edit" },
-      { value: "report:view", label: "report:view" },
-      { value: "report:generate", label: "report:generate" },
-      { value: "document:view", label: "document:view" },
-      { value: "document:create", label: "document:create" },
-    ],
-    viewer: [
-      { value: "audit:view", label: "audit:view" },
-      { value: "audit:create", label: "audit:create" },
-      { value: "audit:delete", label: "audit:delete" },
-      { value: "user:view", label: "user:view" },
-      { value: "user:create", label: "user:create" },
-      { value: "user:edit", label: "user:edit" },
-      { value: "report:view", label: "report:view" },
-      { value: "report:generate", label: "report:generate" },
-      { value: "document:view", label: "document:view" },
-      { value: "document:create", label: "document:create" },
-    ],
-  };
-
   const basePermissionOptions = [
-    "audit:view",
-    "audit:create",
-    "audit:delete",
-    "user:view",
-    "user:create",
-    "user:edit",
-    "report:view",
-    "report:generate",
-    "document:view",
-    "document:create",
+    "vehicle:register",
+    "vehicle:view",
+    "vehicle:update",
+    "vehicle:transfer",
+    "vehicle:history:read",
+    "license:read",
+    "license:issue",
+    "license:renew",
+    "license:update",
+    "license:suspend",
+    "license:revoke",
+    "license:history:read",
+    "citizen:view",
+    "identity:read",
+    "identity:verify",
+    "identity:search",
+    "violation:create",
+    "violation:read",
+    "violation:update",
+    "fine:create",
+    "fine:read",
+    "fine:update",
+    "organization:user:create",
+    "organization:user:view",
+    "organization:user:update",
+    "organization:user:delete",
   ].map((p) => ({ value: p, label: p }));
 
   // Helper: avoid selecting same role twice
@@ -120,10 +98,9 @@ export default function Create({ open, onCancel }) {
       basePermissions: values.basePermission,
       predefinedRoles: userRoles.map((ur) => ({
         roleCode: ur.role.toUpperCase(),
-        roleName:
-          roleOptions.find((r) => r.value === ur.role)?.label || ur.role,
         permissions: ur.permissions,
         isAdmin: ur.isAdmin,
+        description: ur.description,
       })),
     };
 
@@ -133,7 +110,9 @@ export default function Create({ open, onCancel }) {
     mutate(payload, {
       onSuccess: () => {
         form.resetFields();
-        setUserRoles([{ role: "", permissions: [], isAdmin: false }]);
+        setUserRoles([
+          { role: "", permissions: [], isAdmin: false, description: "" },
+        ]);
         onCancel();
       },
     });
@@ -143,6 +122,12 @@ export default function Create({ open, onCancel }) {
     form.resetFields();
     setUserRoles([{ role: "", permissions: [], isAdmin: false }]);
     onCancel();
+  };
+
+  const handleDescriptionChange = (index, value) => {
+    const updatedRoles = [...userRoles];
+    updatedRoles[index].description = value;
+    setUserRoles(updatedRoles);
   };
 
   return (
@@ -273,12 +258,20 @@ export default function Create({ open, onCancel }) {
                   placeholder="Select Permissions"
                   value={rolePermission.permissions}
                   onChange={(values) => handlePermissionChange(index, values)}
-                  options={
-                    rolePermission.role
-                      ? permissionsByRole[rolePermission.role]
-                      : []
-                  }
+                  options={basePermissionOptions}
                   disabled={!rolePermission.role}
+                />
+              </Form.Item>
+
+              {/* Role Description */}
+              <Form.Item label="Role Description" className="col-span-2">
+                <TextArea
+                  placeholder="Enter description for this role"
+                  value={rolePermission.description}
+                  onChange={(e) =>
+                    handleDescriptionChange(index, e.target.value)
+                  }
+                  rows={3}
                 />
               </Form.Item>
             </div>
@@ -302,6 +295,7 @@ export default function Create({ open, onCancel }) {
               type="primary"
               htmlType="submit"
               className="px-6 bg-teal-500 hover:bg-teal-600"
+              loading={isPending}
             >
               Create
             </Button>
