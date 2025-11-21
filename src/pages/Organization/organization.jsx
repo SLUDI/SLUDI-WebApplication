@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Tag, Tooltip, Typography } from "antd";
+import { Button, Input, Modal, Spin, Tag, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import MainButton from "../../components/baseComponents/button/MainButton";
 import { Edit, Eye, MoreVertical, Trash2 } from "lucide-react";
@@ -15,56 +15,7 @@ import NoPostImg from "../../assets/images/NoPostImg";
 import TextArea from "antd/es/input/TextArea";
 const { Search } = Input;
 const Text = Typography;
-// const posts = [
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-//   {
-//     id: "0001",
-//     sector: "Security",
-//     type: "Government",
-//     email: "Personal@gmail.com",
-//   },
-// ];
+
 const Organization = () => {
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -89,7 +40,7 @@ const Organization = () => {
     );
   });
 
-  console.log(organizationData?.data);
+  //console.log(organizationData?.data);
 
   const [detailsModal, setDetailsModal] = useState({ open: false, user: null });
   const [suspendModal, setSuspendModal] = useState({ open: false, user: null });
@@ -212,6 +163,14 @@ const Organization = () => {
       },
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <>
       <div className="p-6 max-h-screen">
@@ -301,7 +260,7 @@ const Organization = () => {
                     {filteredPosts.map((user) => (
                       <div
                         key={user.userId}
-                        className="w-full grid grid-cols-28 pt-1 border-3 border-b-[#F1F5F9] p-2 rounded-xl"
+                        className="w-full grid grid-cols-28 pt-1 border-3 bg-white border-b-[#F1F5F9] p-2 rounded-xl"
                       >
                         <div className="col-span-4 flex items-center justify-start p-3 h-[40px]">
                           <Tooltip title={user.orgCode}>

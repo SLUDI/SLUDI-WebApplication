@@ -5,24 +5,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
 import MainButton from "../../../components/baseComponents/button/MainButton";
 import { FcOk } from "react-icons/fc";
-import { useLocation } from "react-router-dom";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "../../../utils/localStorageHelper";
 
 export default function Step2() {
   const dispatch = useDispatch();
   const currentStep = useSelector((state) => state.step.currentStep);
   const completedSteps = useSelector((state) => state.step.completedSteps);
-  const location = useLocation();
-  const { userId } = location.state || {};
+  //const location = useLocation();
+  //const { userId } = location.state || {};
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recording, setRecording] = useState(false);
   const [instruction, setInstruction] = useState("Get ready...");
   const [progress, setProgress] = useState(0);
-  const [chunks, setChunks] = useState([]);
+  //const [chunks, setChunks] = useState([]);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [videoBlob, setVideoBlob] = useState(null);
+  //const [videoBlob, setVideoBlob] = useState(null);
   const [extractedEmbedding, setExtractedEmbedding] = useState([]);
 
   const instructions = [
@@ -38,13 +41,16 @@ export default function Step2() {
   // Store embedding in localStorage
   const storeEmbeddingInLocalStorage = (embedding) => {
     try {
-      localStorage.setItem("face_embedding", JSON.stringify(embedding));
-      localStorage.setItem("embedding_timestamp", new Date().toISOString());
-      console.log(
-        "Embedding stored in localStorage:",
-        embedding.length,
-        "dimensions"
-      );
+      //localStorage.setItem("face_embedding", JSON.stringify(embedding));
+      //localStorage.setItem("embedding_timestamp", new Date().toISOString());
+
+      setLocalStorageData("face_embedding", JSON.stringify(embedding));
+      setLocalStorageData("embedding_timestamp", new Date().toISOString());
+      // console.log(
+      //   "Embedding stored in localStorage:",
+      //   embedding.length,
+      //   "dimensions"
+      // );
       message.success("Face features extracted and stored successfully!");
     } catch (error) {
       console.error("Error storing embedding in localStorage:", error);
@@ -90,7 +96,7 @@ export default function Step2() {
       }
 
       const result = await response.json();
-      console.log("Upload successful:", result);
+      // console.log("Upload successful:", result);
 
       // Extract and store the embedding
       if (result.embedding && Array.isArray(result.embedding)) {
@@ -123,10 +129,10 @@ export default function Step2() {
   // Process recorded video
   const processRecordedVideo = (recordedChunks) => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
-    setVideoBlob(blob);
+    //setVideoBlob(blob);
 
     // Create URL for download (optional)
-    const url = URL.createObjectURL(blob);
+    // const url = URL.createObjectURL(blob);
 
     // Upload to backend
     uploadVideoToBackend(blob);
@@ -150,7 +156,7 @@ export default function Step2() {
     };
 
     recorder.onstop = () => {
-      setChunks(localChunks);
+      //setChunks(localChunks);
       stream.getTracks().forEach((track) => track.stop());
       processRecordedVideo(localChunks);
     };
@@ -177,7 +183,7 @@ export default function Step2() {
   // Reset and start over
   const resetCapture = () => {
     setUploadSuccess(false);
-    setVideoBlob(null);
+    //setVideoBlob(null);
     setExtractedEmbedding([]);
     setInstruction("Get ready...");
     setProgress(0);
@@ -193,7 +199,7 @@ export default function Step2() {
 
   // Check if embedding exists in localStorage on component mount
   React.useEffect(() => {
-    const storedEmbedding = localStorage.getItem("face_embedding");
+    const storedEmbedding = getLocalStorageData("face_embedding");
     if (storedEmbedding) {
       try {
         const embedding = JSON.parse(storedEmbedding);

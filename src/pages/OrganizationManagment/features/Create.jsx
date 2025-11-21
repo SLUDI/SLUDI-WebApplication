@@ -1,5 +1,5 @@
 import { Modal, Form, Input, Select, Button, message } from "antd";
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import {
   useOrganizationRoles,
@@ -26,7 +26,7 @@ export default function Create({ open, onCancel }) {
 
     // Call API
     mutate(payload, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         message.success("User created successfully!");
         form.resetFields();
         onCancel();

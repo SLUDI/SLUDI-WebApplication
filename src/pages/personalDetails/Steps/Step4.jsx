@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, message, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
@@ -7,6 +7,7 @@ import { FcOk } from "react-icons/fc";
 import { MdFingerprint } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { useSaveBiometricData } from "../../../hooks/idCreate";
+import { getLocalStorageData } from "../../../utils/localStorageHelper";
 
 const FINGERS = [
   { id: "thumb_left", label: "Left Thumb", position: "left" },
@@ -27,10 +28,10 @@ export default function Step4() {
   const completedSteps = useSelector((state) => state.step.completedSteps);
   const location = useLocation();
   const { userId } = location.state || {};
-  const storedEmbeddingData = localStorage.getItem("face_embedding");
+  const storedEmbeddingData = getLocalStorageData("face_embedding");
 
-  console.log("Ab", storedEmbeddingData);
-  console.log(userId);
+  //   console.log("Ab", storedEmbeddingData);
+  //   console.log(userId);
 
   const [collectedFingers, setCollectedFingers] = useState({});
   const [currentFinger, setCurrentFinger] = useState(0);
@@ -176,48 +177,43 @@ export default function Step4() {
                 <span className="text-2xl mr-2">👋</span> Left Hand
               </h3>
               <div className="grid grid-cols-5 gap-4">
-                {FINGERS.filter((f) => f.position === "left").map(
-                  (finger, idx) => {
-                    const actualIdx = FINGERS.indexOf(finger);
-                    const isCollected = !!collectedFingers[actualIdx];
-                    const isCurrentFinger = currentFinger === actualIdx;
+                {FINGERS.filter((f) => f.position === "left").map((finger) => {
+                  const actualIdx = FINGERS.indexOf(finger);
+                  const isCollected = !!collectedFingers[actualIdx];
+                  const isCurrentFinger = currentFinger === actualIdx;
 
-                    return (
-                      <div
-                        key={finger.id}
-                        className="flex flex-col items-center"
+                  return (
+                    <div key={finger.id} className="flex flex-col items-center">
+                      <button
+                        onClick={() => captureFingerprint(actualIdx)}
+                        disabled={isCapturing || uploadingFinger !== null}
+                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
+                          isCollected
+                            ? "bg-green-100 border-2 border-green-500"
+                            : isCurrentFinger
+                            ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
+                            : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
+                        } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
                       >
-                        <button
-                          onClick={() => captureFingerprint(actualIdx)}
-                          disabled={isCapturing || uploadingFinger !== null}
-                          className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
-                            isCollected
-                              ? "bg-green-100 border-2 border-green-500"
-                              : isCurrentFinger
-                              ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
-                              : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
-                          } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
-                        >
-                          {uploadingFinger === actualIdx ? (
-                            <Spin size="small" />
-                          ) : isCollected ? (
-                            <FcOk className="text-2xl" />
-                          ) : (
-                            <MdFingerprint className="text-3xl text-gray-600" />
-                          )}
-                        </button>
-                        <p className="text-xs font-medium text-gray-700 text-center">
-                          {finger.label}
-                        </p>
-                        {isCollected && (
-                          <p className="text-xs text-green-600 mt-1">
-                            ✓ Collected
-                          </p>
+                        {uploadingFinger === actualIdx ? (
+                          <Spin size="small" />
+                        ) : isCollected ? (
+                          <FcOk className="text-2xl" />
+                        ) : (
+                          <MdFingerprint className="text-3xl text-gray-600" />
                         )}
-                      </div>
-                    );
-                  }
-                )}
+                      </button>
+                      <p className="text-xs font-medium text-gray-700 text-center">
+                        {finger.label}
+                      </p>
+                      {isCollected && (
+                        <p className="text-xs text-green-600 mt-1">
+                          ✓ Collected
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -227,48 +223,43 @@ export default function Step4() {
                 <span className="text-2xl mr-2">👋</span> Right Hand
               </h3>
               <div className="grid grid-cols-5 gap-4">
-                {FINGERS.filter((f) => f.position === "right").map(
-                  (finger, idx) => {
-                    const actualIdx = FINGERS.indexOf(finger);
-                    const isCollected = !!collectedFingers[actualIdx];
-                    const isCurrentFinger = currentFinger === actualIdx;
+                {FINGERS.filter((f) => f.position === "right").map((finger) => {
+                  const actualIdx = FINGERS.indexOf(finger);
+                  const isCollected = !!collectedFingers[actualIdx];
+                  const isCurrentFinger = currentFinger === actualIdx;
 
-                    return (
-                      <div
-                        key={finger.id}
-                        className="flex flex-col items-center"
+                  return (
+                    <div key={finger.id} className="flex flex-col items-center">
+                      <button
+                        onClick={() => captureFingerprint(actualIdx)}
+                        disabled={isCapturing || uploadingFinger !== null}
+                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
+                          isCollected
+                            ? "bg-green-100 border-2 border-green-500"
+                            : isCurrentFinger
+                            ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
+                            : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
+                        } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
                       >
-                        <button
-                          onClick={() => captureFingerprint(actualIdx)}
-                          disabled={isCapturing || uploadingFinger !== null}
-                          className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
-                            isCollected
-                              ? "bg-green-100 border-2 border-green-500"
-                              : isCurrentFinger
-                              ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
-                              : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
-                          } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
-                        >
-                          {uploadingFinger === actualIdx ? (
-                            <Spin size="small" />
-                          ) : isCollected ? (
-                            <FcOk className="text-2xl" />
-                          ) : (
-                            <MdFingerprint className="text-3xl text-gray-600" />
-                          )}
-                        </button>
-                        <p className="text-xs font-medium text-gray-700 text-center">
-                          {finger.label}
-                        </p>
-                        {isCollected && (
-                          <p className="text-xs text-green-600 mt-1">
-                            ✓ Collected
-                          </p>
+                        {uploadingFinger === actualIdx ? (
+                          <Spin size="small" />
+                        ) : isCollected ? (
+                          <FcOk className="text-2xl" />
+                        ) : (
+                          <MdFingerprint className="text-3xl text-gray-600" />
                         )}
-                      </div>
-                    );
-                  }
-                )}
+                      </button>
+                      <p className="text-xs font-medium text-gray-700 text-center">
+                        {finger.label}
+                      </p>
+                      {isCollected && (
+                        <p className="text-xs text-green-600 mt-1">
+                          ✓ Collected
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

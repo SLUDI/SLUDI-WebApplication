@@ -29,10 +29,10 @@ export default function MainLayout() {
   // 👇 Example role (you can later set this dynamically after login)
   //const [role, setRole] = useState("SuperAdmin"); // or "Admin"
 
-  const role = useSelector((state) => state.role.role);
+  //const role = useSelector((state) => state.role.role);
   const organizationId = useSelector((state) => state.auth.organizationId);
   const roleCode = useSelector((state) => state.auth.roleCode);
-  console.log(role);
+  //console.log(role);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -80,7 +80,7 @@ export default function MainLayout() {
           }
         />
       ),
-      route: "/usermangement",
+      route: "/usermangemnt",
     },
     {
       key: "3",

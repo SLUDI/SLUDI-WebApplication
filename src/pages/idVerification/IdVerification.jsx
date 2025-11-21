@@ -20,7 +20,7 @@ export default function IdVerification() {
     isLoading,
   } = useIdVerification();
 
-  console.log("idVerificationData", idVerificationData);
+  //console.log("idVerificationData", idVerificationData);
 
   // Extract posts from API response
   const posts =
@@ -28,34 +28,7 @@ export default function IdVerification() {
       (item) => item.kycStatus?.toUpperCase() === "NOT_STARTED"
     ) || [];
 
-  console.log("idVerificationData", idVerificationData);
-
-  //pagination
-  // const itemRender = (_, type, originalElement) => {
-  //   if (type === "prev") {
-  //     return (
-  //       <a className="pr-2 t-13 flex items-center justify-center gap-2 text-colorDarkDarkGray">
-  //         <span>
-  //           <MdKeyboardArrowLeft className="text-[16px] " />
-  //         </span>
-  //         Previous
-  //         <span>|</span>
-  //       </a>
-  //     );
-  //   }
-  //   if (type === "next") {
-  //     return (
-  //       <a className="pl-2 t-13 flex items-center justify-center gap-2 text-colorDarkDarkGray">
-  //         <span>|</span>
-  //         Next
-  //         <span>
-  //           <MdKeyboardArrowRight className="text-[16px] font-light" />
-  //         </span>
-  //       </a>
-  //     );
-  //   }
-  //   return originalElement;
-  // };
+  //console.log("idVerificationData", idVerificationData);
 
   if (isLoading) {
     return (
@@ -80,12 +53,6 @@ export default function IdVerification() {
       <div className="p-6  max-h-screen">
         <Text className="font-semibold min-w-fit t-36 ">Id verification</Text>
         <div className="w-full  sm:w-full  rounded-xl py-8 px-2 ssm:px-3 sm:px-4 lg:px-8 mt-4 bg-colorSelected gap-4 flex flex-col flex-1 items-center justify-between bg-[#CCCCCC]">
-          <div className="w-full flex items-center gap-4">
-            <Text className="t-23 font-bold text-black">
-              Pending Verification Requests
-            </Text>
-          </div>
-
           {!isLoading && (
             <div className="w-full overflow-auto scroll">
               {/* header */}

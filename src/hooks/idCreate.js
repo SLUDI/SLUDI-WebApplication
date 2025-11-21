@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   registerUser,
   registerCitizen,
@@ -40,8 +40,10 @@ export const useDateAvailability = () => {
 };
 
 export const useAppoinment = () => {
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: appoinmentConfirm,
+    onSuccess: () => qc.invalidateQueries(["idVerification"]),
   });
 };
 

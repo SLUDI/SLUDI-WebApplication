@@ -12,7 +12,7 @@ export default function Step3() {
   const completedSteps = useSelector((state) => state.step.completedSteps);
 
   const [storedEmbedding, setStoredEmbedding] = useState([]);
-  const [threshold, setThreshold] = useState(0.8);
+  //const [threshold, setThreshold] = useState(0.8);
   const [verificationResult, setVerificationResult] = useState(null);
   const [similarityScore, setSimilarityScore] = useState(null);
   const [embeddingLoaded, setEmbeddingLoaded] = useState(false);
@@ -24,10 +24,10 @@ export default function Step3() {
     "Get ready for verification..."
   );
   const [progress, setProgress] = useState(0);
-  const [chunks, setChunks] = useState([]);
+  //const [chunks, setChunks] = useState([]);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  const [videoBlob, setVideoBlob] = useState(null);
+  //const [videoBlob, setVideoBlob] = useState(null);
 
   const instructions = [
     "Look straight",
@@ -70,29 +70,6 @@ export default function Step3() {
       message.error("Failed to load stored embedding.");
       setEmbeddingLoaded(false);
     }
-  };
-
-  // Clear stored embedding
-  const clearStoredEmbedding = () => {
-    localStorage.removeItem("face_embedding");
-    localStorage.removeItem("embedding_timestamp");
-    setStoredEmbedding([]);
-    setEmbeddingLoaded(false);
-    message.info("Stored embedding cleared.");
-  };
-
-  // Use sample embedding as fallback
-  const useSampleEmbedding = () => {
-    const sampleEmbedding = [
-      0.15981954336166382, -0.17048649489879608, -0.10595730692148209,
-      0.04234567890123456, -0.08912345678901234, 0.1567890123456789,
-      -0.13456789012345678, 0.06789012345678901, -0.17890123456789012,
-      0.12345678901234567,
-    ];
-
-    setStoredEmbedding(sampleEmbedding);
-    setEmbeddingLoaded(true);
-    message.info("Using sample embedding for demonstration.");
   };
 
   // Access webcam
@@ -169,8 +146,8 @@ export default function Step3() {
   // Process recorded video for verification
   const processVerificationVideo = (recordedChunks) => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
-    setVideoBlob(blob);
-    verifyVideoWithEmbedding(blob, storedEmbedding, threshold);
+    //setVideoBlob(blob);
+    verifyVideoWithEmbedding(blob, storedEmbedding);
   };
 
   // Start recording for verification
@@ -201,7 +178,7 @@ export default function Step3() {
     };
 
     recorder.onstop = () => {
-      setChunks(localChunks);
+      //setChunks(localChunks);
       stream.getTracks().forEach((track) => track.stop());
       processVerificationVideo(localChunks);
     };
@@ -230,7 +207,7 @@ export default function Step3() {
     setVerificationSuccess(false);
     setVerificationResult(null);
     setSimilarityScore(null);
-    setVideoBlob(null);
+    //setVideoBlob(null);
     setInstruction("Get ready for verification...");
     setProgress(0);
 
@@ -301,8 +278,7 @@ export default function Step3() {
             </p>
             {similarityScore && (
               <p className="text-gray-600 mt-2">
-                Similarity Score: {(similarityScore * 100).toFixed(2)}%
-                (Required: {(threshold * 100).toFixed(0)}%)
+                Similarity Score: {(similarityScore * 100).toFixed(2)}% 33
               </p>
             )}
           </div>
@@ -367,9 +343,9 @@ export default function Step3() {
                 <strong>Similarity Score:</strong>{" "}
                 {(similarityScore * 100).toFixed(2)}%
               </div>
-              <div>
+              {/* <div>
                 <strong>Threshold:</strong> {(threshold * 100).toFixed(0)}%
-              </div>
+              </div> */}
               <div>
                 <strong>Status:</strong>
                 <span

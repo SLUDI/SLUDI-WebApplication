@@ -6,15 +6,6 @@ const { Title, Text } = Typography;
 export default function ViewTemplate({ open, onCancel, data }) {
   if (!data) return <Empty />;
 
-  const getStatusColor = (status) => {
-    const colors = {
-      PENDING: "gold",
-      FULFILLED: "green",
-      REJECTED: "red",
-    };
-    return colors[status] || "default";
-  };
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",

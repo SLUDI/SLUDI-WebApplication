@@ -39,8 +39,8 @@ const DigitalIdentityForm = () => {
   const selectDate = useSelector((state) => state.availableDate.date);
   const selectDistrict = useSelector((state) => state.availableDate.distric);
 
-  console.log("Selected Date from Redux:", selectDate);
-  console.log("Selected District from Redux:", selectDistrict);
+  //console.log("Selected Date from Redux:", selectDate);
+  //console.log("Selected District from Redux:", selectDistrict);
 
   const deviceInfo = useDeviceInfo();
 
@@ -72,8 +72,8 @@ const DigitalIdentityForm = () => {
       profilePhoto: values.profilePhoto[0].originFileObj,
     };
 
-    console.log("Payload to submit:", payload);
-    console.log("Device Info:", deviceInfo);
+    //console.log("Payload to submit:", payload);
+    //console.log("Device Info:", deviceInfo);
 
     mutate(payload, {
       onSuccess: (res) => {

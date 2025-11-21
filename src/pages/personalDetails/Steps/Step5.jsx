@@ -9,6 +9,7 @@ import { MdLocationOn, MdFingerprint } from "react-icons/md";
 import { BiCard } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGenerateCredential, useRegister } from "../../../hooks/idCreate";
+import { getLocalStorageData } from "../../../utils/localStorageHelper";
 
 export default function Step5() {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ export default function Step5() {
 
   // Fetch all collected data
   useEffect(() => {
-    const faceEmbedding = localStorage.getItem("face_embedding");
+    const faceEmbedding = getLocalStorageData("face_embedding");
     const fingerprints = localStorage.getItem("fingerprints");
 
     const data = {
@@ -83,7 +84,7 @@ export default function Step5() {
         const didFull = res.data?.didId; // did:sludi:200131161875
         const shortDid = didFull?.split(":")[2]; // 200131161875
 
-        console.log(didFull);
+        //console.log(didFull);
 
         setRegistrationId(didFull);
         setIsRegistering(true);
@@ -91,8 +92,8 @@ export default function Step5() {
 
         // Now call credential API automatically
         generateCredential.mutate(shortDid, {
-          onSuccess: (credRes) => {
-            console.log("Credential Response:", credRes);
+          onSuccess: () => {
+            // console.log("Credential Response:", credRes);
             message.success("Credential generated successfully!");
           },
           onError: (error) => {

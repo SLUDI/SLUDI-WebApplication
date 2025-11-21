@@ -33,13 +33,13 @@ export default function LicenseIssuanceForm() {
   // Get data from navigation state
   const navigationData = location.state;
 
-  console.log("Navigation State Data:", navigationData);
-  console.log("Session ID:", navigationData?.sessionId);
+  //console.log("Navigation State Data:", navigationData);
+  //console.log("Session ID:", navigationData?.sessionId);
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const verificationData = useSelector((state) => state.licenseVerification);
 
-  console.log("Verification Data:", verificationData);
+  //console.log("Verification Data:", verificationData);
 
   // Extract shared attributes safely
   const citizenInfo = verificationData?.sharedAttributes || {};
@@ -55,7 +55,7 @@ export default function LicenseIssuanceForm() {
       }))
     : [];
 
-  console.log("Vehicle Categories:", vehicleCategories?.data);
+  //console.log("Vehicle Categories:", vehicleCategories?.data);
 
   const handleIssueLicense = (values) => {
     const payload = {

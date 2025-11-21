@@ -2,7 +2,6 @@ import { Button, Pagination, Spin, Tooltip, Typography, Input } from "antd";
 import NoPostImg from "../../assets/images/NoPostImg";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import MainButton from "../../components/baseComponents/button/MainButton";
-import { useState } from "react";
 
 import { useIdVerification } from "../../hooks/idCreate";
 import dayjs from "dayjs";
@@ -13,47 +12,20 @@ const Text = Typography;
 
 export default function PendingIds() {
   const navigate = useNavigate();
-  const [verify, setOpenVerify] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const {
     data: idVerificationData,
     isError,
     error,
     isLoading,
   } = useIdVerification();
-  console.log("idVerificationData", idVerificationData);
+  //console.log("idVerificationData", idVerificationData);
   // Extract posts from API response
   const posts =
     idVerificationData?.data?.filter(
       (item) => item.kycStatus?.toUpperCase() === "IN_PROGRESS"
     ) || [];
-  console.log("idVerificationData", idVerificationData);
-  //pagination
-  // const itemRender = (_, type, originalElement) => {
-  //   if (type === "prev") {
-  //     return (
-  //       <a className="pr-2 t-13 flex items-center justify-center gap-2 text-colorDarkDarkGray">
-  //         <span>
-  //           <MdKeyboardArrowLeft className="text-[16px] " />
-  //         </span>
-  //         Previous
-  //         <span>|</span>
-  //       </a>
-  //     );
-  //   }
-  //   if (type === "next") {
-  //     return (
-  //       <a className="pl-2 t-13 flex items-center justify-center gap-2 text-colorDarkDarkGray">
-  //         <span>|</span>
-  //         Next
-  //         <span>
-  //           <MdKeyboardArrowRight className="text-[16px] font-light" />
-  //         </span>
-  //       </a>
-  //     );
-  //   }
-  //   return originalElement;
-  // };
+  //console.log("idVerificationData", idVerificationData);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -89,7 +61,7 @@ export default function PendingIds() {
         </div>
         <div>
           <div className="mt-[-8px] ml-4 text-[#000000] font-bold">
-            Total Records : 3
+            Total Records : {posts?.length || 0}
           </div>
         </div>
       </div>

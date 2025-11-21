@@ -7,11 +7,11 @@ export default function Create({ open, onCancel }) {
   const { mutate, isPending } = useOrganizationCreate();
 
   const handleSubmit = (values) => {
-    console.log("Form values:", values);
+    //console.log("Form values:", values);
 
     // Call API
     mutate(values, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         message.success("Organization created successfully!");
         form.resetFields();
         onCancel();

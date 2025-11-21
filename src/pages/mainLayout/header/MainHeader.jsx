@@ -1,7 +1,10 @@
+import { useSelector } from "react-redux";
 import T from "../../../components/baseComponents/text/T";
 import HeaderImage from "../../../components/commonComponent/HeaderImage";
 
 export default function MainHeader() {
+  const name = useSelector((state) => state.auth.data.username);
+
   return (
     <div className="flex flex-row items-center justify-end  p-2 border-b ">
       <div className="flex items-center justify-end gap-4">
@@ -10,12 +13,12 @@ export default function MainHeader() {
             <HeaderImage
               url={null}
               // url={user?.imageURL}
-              name={`ishan`}
+              name={name}
               textSize={6}
             />
           </div>
           <T variant="h6" className="font-normal text-colorPrimary">
-            ISHAN DEVIND
+            {name}
           </T>
         </div>
       </div>

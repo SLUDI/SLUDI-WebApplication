@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ScoreIndicator({ score }) {
-  const degree = (score / 100) * 360;
+  //const degree = (score / 100) * 360;
 
   return (
     <div className="relative w-32 h-32">

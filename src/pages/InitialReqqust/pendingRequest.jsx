@@ -58,7 +58,7 @@ const PendingRequest = () => {
   }
 
   const handleIssueClick = (post) => {
-    console.log("Post data before dispatch:", post);
+    //console.log("Post data before dispatch:", post);
 
     const payload = {
       sessionId: post?.sessionId,
@@ -69,7 +69,7 @@ const PendingRequest = () => {
       expiresAt: post?.expiresAt,
     };
 
-    console.log("Payload being dispatched:", payload);
+    //console.log("Payload being dispatched:", payload);
 
     dispatch(setLicenseVerificationData(payload));
 

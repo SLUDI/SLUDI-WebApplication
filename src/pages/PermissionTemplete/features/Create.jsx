@@ -104,7 +104,7 @@ export default function Create({ open, onCancel }) {
       })),
     };
 
-    console.log("Final Payload:", payload);
+    //console.log("Final Payload:", payload);
 
     // Pass data to backend via hook
     mutate(payload, {

@@ -11,14 +11,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 
-import {
-  useAllOrganizationUsers,
-  useApproveUser,
-  useOrganizationCount,
-  useReactivateUser,
-  useSuspendUser,
-} from "../../hooks/organizationUser";
-import { useSelector } from "react-redux";
+//import { useSelector } from "react-redux";
 import NoPostImg from "../../assets/images/NoPostImg";
 import { useGetAllLicenses } from "../../hooks/licenseIssue";
 import ViewTemplate from "./features/ViewTemplate";
@@ -29,21 +22,10 @@ const Text = Typography;
 const { Option } = Select;
 
 const IssuedLicense = () => {
-  const [open, setOpen] = useState(false);
-  const [detailsModal, setDetailsModal] = useState({ open: false, user: null });
-  const organizationId = useSelector((state) => state.auth.organizationId);
+  //const organizationId = useSelector((state) => state.auth.organizationId);
 
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-
-  const [filterStatus, setFilterStatus] = useState("NOT_FILTER");
-
-  const { data: userData, isLoading } = useAllOrganizationUsers(
-    organizationId,
-    filterStatus
-  );
-
-  const { data: userCount } = useOrganizationCount(organizationId);
 
   const { data: licenseData, isLoading: isLicenseLoading } =
     useGetAllLicenses();
@@ -52,12 +34,6 @@ const IssuedLicense = () => {
     licenseData?.data?.filter(
       (item) => item.status?.toUpperCase() === "COMPLETED"
     ) || [];
-
-  console.log(userData); // Now correct!
-
-  // Use mock data if API data is not available, otherwise use API data
-  const count = userCount?.data;
-  const users = userData?.data || [];
 
   // Status rendering with colors
   const getStatusTag = (status) => {

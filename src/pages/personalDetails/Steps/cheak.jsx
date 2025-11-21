@@ -1,255 +1,255 @@
-import React, { useRef, useState } from "react";
-import Webcam from "react-webcam";
-import { Flex, Form, Progress, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
-import MainButton from "../../../components/baseComponents/button/MainButton";
-import { FcOk } from "react-icons/fc";
+// import React, { useRef, useState } from "react";
+// import Webcam from "react-webcam";
+// import { Flex, Form, Progress, message } from "antd";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
+// import MainButton from "../../../components/baseComponents/button/MainButton";
+// import { FcOk } from "react-icons/fc";
 
-export default function Step2() {
-  const dispatch = useDispatch();
-  const currentStep = useSelector((state) => state.step.currentStep);
-  const completedSteps = useSelector((state) => state.step.completedSteps);
+// export default function Step2() {
+//   const dispatch = useDispatch();
+//   const currentStep = useSelector((state) => state.step.currentStep);
+//   const completedSteps = useSelector((state) => state.step.completedSteps);
 
-  const videoRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const [recording, setRecording] = useState(false);
-  const [instruction, setInstruction] = useState("Get ready...");
-  const [progress, setProgress] = useState(0);
-  const [chunks, setChunks] = useState([]);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [videoBlob, setVideoBlob] = useState(null);
+//   const videoRef = useRef(null);
+//   const mediaRecorderRef = useRef(null);
+//   const [recording, setRecording] = useState(false);
+//   const [instruction, setInstruction] = useState("Get ready...");
+//   const [progress, setProgress] = useState(0);
+//   const [chunks, setChunks] = useState([]);
+//   const [uploadSuccess, setUploadSuccess] = useState(false);
+//   const [uploading, setUploading] = useState(false);
+//   const [videoBlob, setVideoBlob] = useState(null);
 
-  const instructions = [
-    "Look straight",
-    "Move your face up",
-    "Move your face down",
-    "Turn your face left",
-    "Turn your face right",
-    "Smile slightly",
-    "Done! Please wait...",
-  ];
+//   const instructions = [
+//     "Look straight",
+//     "Move your face up",
+//     "Move your face down",
+//     "Turn your face left",
+//     // "Turn your face right",
+//     "Smile slightly",
+//     "Done! Please wait...",
+//   ];
 
-  // Access webcam
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-      return stream;
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      message.error("Failed to access camera. Please check permissions.");
-      return null;
-    }
-  };
+//   // Access webcam
+//   const startCamera = async () => {
+//     try {
+//       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+//       if (videoRef.current) {
+//         videoRef.current.srcObject = stream;
+//       }
+//       return stream;
+//     } catch (error) {
+//       console.error("Error accessing camera:", error);
+//       message.error("Failed to access camera. Please check permissions.");
+//       return null;
+//     }
+//   };
 
-  // Upload video to backend
-  const uploadVideoToBackend = async (blob) => {
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", blob, "face_capture.webm");
+//   // Upload video to backend
+//   const uploadVideoToBackend = async (blob) => {
+//     setUploading(true);
+//     try {
+//       const formData = new FormData();
+//       formData.append("file", blob, "face_capture.webm");
 
-      const response = await fetch(
-        "https://Ishan1998-Feature.hf.space/extract",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+//       const response = await fetch(
+//         "https://Ishan1998-Feature.hf.space/extract",
+//         {
+//           method: "POST",
+//           body: formData,
+//         }
+//       );
 
-      if (!response.ok) {
-        setInstruction("Error video processign again capture");
-        throw new Error(`Upload failed with status: ${response.status}`);
-      } else {
-        setInstruction("Sucessfuly Process go to next step or recapture");
-      }
+//       if (!response.ok) {
+//         setInstruction("Error video processign again capture");
+//         throw new Error(`Upload failed with status: ${response.status}`);
+//       } else {
+//         setInstruction("Sucessfuly Process go to next step or recapture");
+//       }
 
-      const result = await response.json();
-      console.log("Upload successful:", result);
+//       const result = await response.json();
+//       console.log("Upload successful:", result);
 
-      setUploadSuccess(true);
-      message.success("Video uploaded successfully!");
+//       setUploadSuccess(true);
+//       message.success("Video uploaded successfully!");
 
-      // Hide video and show success message
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
+//       // Hide video and show success message
+//       if (videoRef.current) {
+//         videoRef.current.srcObject = null;
+//       }
 
-      return result;
-    } catch (error) {
-      console.error("Error uploading video:", error);
-      message.error("Failed to upload video. Please try again.");
-      setUploadSuccess(false);
-      throw error;
-    } finally {
-      setUploading(false);
-    }
-  };
+//       return result;
+//     } catch (error) {
+//       console.error("Error uploading video:", error);
+//       message.error("Failed to upload video. Please try again.");
+//       setUploadSuccess(false);
+//       throw error;
+//     } finally {
+//       setUploading(false);
+//     }
+//   };
 
-  // Process recorded video
-  const processRecordedVideo = (recordedChunks) => {
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    setVideoBlob(blob);
+//   // Process recorded video
+//   const processRecordedVideo = (recordedChunks) => {
+//     const blob = new Blob(recordedChunks, { type: "video/webm" });
+//     setVideoBlob(blob);
 
-    // Create URL for download (optional)
-    const url = URL.createObjectURL(blob);
+//     // Create URL for download (optional)
+//     const url = URL.createObjectURL(blob);
 
-    // Upload to backend
-    uploadVideoToBackend(blob);
-  };
+//     // Upload to backend
+//     uploadVideoToBackend(blob);
+//   };
 
-  // Start recording and show instructions
-  const startRecording = async () => {
-    setUploadSuccess(false);
-    const stream = await startCamera();
-    if (!stream) return;
+//   // Start recording and show instructions
+//   const startRecording = async () => {
+//     setUploadSuccess(false);
+//     const stream = await startCamera();
+//     if (!stream) return;
 
-    const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
-    mediaRecorderRef.current = recorder;
-    const localChunks = [];
+//     const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+//     mediaRecorderRef.current = recorder;
+//     const localChunks = [];
 
-    recorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        localChunks.push(e.data);
-      }
-    };
+//     recorder.ondataavailable = (e) => {
+//       if (e.data.size > 0) {
+//         localChunks.push(e.data);
+//       }
+//     };
 
-    recorder.onstop = () => {
-      setChunks(localChunks);
-      stream.getTracks().forEach((track) => track.stop());
-      processRecordedVideo(localChunks);
-    };
+//     recorder.onstop = () => {
+//       setChunks(localChunks);
+//       stream.getTracks().forEach((track) => track.stop());
+//       processRecordedVideo(localChunks);
+//     };
 
-    recorder.start();
-    setRecording(true);
-    setProgress(0);
+//     recorder.start();
+//     setRecording(true);
+//     setProgress(0);
 
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < instructions.length) {
-        setInstruction(instructions[i]);
-        setProgress(((i + 1) / instructions.length) * 100);
-        i++;
-      } else {
-        clearInterval(interval);
-        recorder.stop();
-        setRecording(false);
-        setInstruction("Processing video...");
-      }
-    }, 2000);
-  };
+//     let i = 0;
+//     const interval = setInterval(() => {
+//       if (i < instructions.length) {
+//         setInstruction(instructions[i]);
+//         setProgress(((i + 1) / instructions.length) * 100);
+//         i++;
+//       } else {
+//         clearInterval(interval);
+//         recorder.stop();
+//         setRecording(false);
+//         setInstruction("Processing video...");
+//       }
+//     }, 2000);
+//   };
 
-  // Reset and start over
-  const resetCapture = () => {
-    setUploadSuccess(false);
-    setVideoBlob(null);
-    setInstruction("Get ready...");
-    setProgress(0);
+//   // Reset and start over
+//   const resetCapture = () => {
+//     setUploadSuccess(false);
+//     setVideoBlob(null);
+//     setInstruction("Get ready...");
+//     setProgress(0);
 
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  };
+//     if (videoRef.current) {
+//       videoRef.current.srcObject = null;
+//     }
+//   };
 
-  return (
-    <div className="w-2/3 bg-[#ffffff] p-6 mt-10 ">
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800 mt-4">
-          Face Capture
-        </h2>
+//   return (
+//     <div className="w-2/3 bg-[#ffffff] p-6 mt-10 ">
+//       <div className="flex flex-col items-center justify-center">
+//         <h2 className="text-2xl font-semibold mb-4 text-gray-800 mt-4">
+//           Face Capture
+//         </h2>
 
-        {uploadSuccess ? (
-          <div className="flex flex-col items-center justify-center w-100 h-80 rounded-xl shadow-lg border border-gray-300 bg-green-50">
-            <FcOk className="text-6xl mb-4" />
-            <p className="text-xl font-semibold text-green-600">
-              Video Uploaded Successfully!
-            </p>
-            <p className="text-gray-600 mt-2">
-              Your face capture has been processed.
-            </p>
-          </div>
-        ) : (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300"
-          />
-        )}
+//         {uploadSuccess ? (
+//           <div className="flex flex-col items-center justify-center w-100 h-80 rounded-xl shadow-lg border border-gray-300 bg-green-50">
+//             <FcOk className="text-6xl mb-4" />
+//             <p className="text-xl font-semibold text-green-600">
+//               Video Uploaded Successfully!
+//             </p>
+//             <p className="text-gray-600 mt-2">
+//               Your face capture has been processed.
+//             </p>
+//           </div>
+//         ) : (
+//           <video
+//             ref={videoRef}
+//             autoPlay
+//             muted
+//             className="w-110 h-80 rounded-xl shadow-lg border border-gray-300"
+//           />
+//         )}
 
-        <div className="mt-4 text-lg font-medium text-black">{instruction}</div>
+//         <div className="mt-4 text-lg font-medium text-black">{instruction}</div>
 
-        <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
-          <div
-            className={`${
-              uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
-            }  h-2.5 rounded-full transition-all duration-500`}
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+//         <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
+//           <div
+//             className={`${
+//               uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
+//             }  h-2.5 rounded-full transition-all duration-500`}
+//             style={{ width: `${progress}%` }}
+//           ></div>
+//         </div>
 
-        {uploadSuccess ? (
-          <button
-            onClick={resetCapture}
-            className="mt-6 px-6 py-2 rounded-lg text-white font-semibold transition bg-green-600 hover:bg-green-700"
-          >
-            Capture Again
-          </button>
-        ) : (
-          <button
-            onClick={startRecording}
-            disabled={recording || uploading}
-            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
-              recording || uploading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#13A4B4] "
-            }`}
-          >
-            {uploading
-              ? "Uploading..."
-              : recording
-              ? "Recording..."
-              : "Start Capture"}
-          </button>
-        )}
-      </div>
+//         {uploadSuccess ? (
+//           <button
+//             onClick={resetCapture}
+//             className="mt-6 px-6 py-2 rounded-lg text-white font-semibold transition bg-green-600 hover:bg-green-700"
+//           >
+//             Capture Again
+//           </button>
+//         ) : (
+//           <button
+//             onClick={startRecording}
+//             disabled={recording || uploading}
+//             className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
+//               recording || uploading
+//                 ? "bg-gray-400 cursor-not-allowed"
+//                 : "bg-[#13A4B4] "
+//             }`}
+//           >
+//             {uploading
+//               ? "Uploading..."
+//               : recording
+//               ? "Recording..."
+//               : "Start Capture"}
+//           </button>
+//         )}
+//       </div>
 
-      <div className="w-full flex items-center justify-end gap-2 mt-10">
-        <MainButton
-          buttonText={"Back"}
-          height={"30px"}
-          width={"15%"}
-          minWidth="63px"
-          type="primary"
-          color="#ffffff"
-          paddingY="2px"
-          htmlType={"button"}
-          onClick={() => {
-            dispatch(setCurrentStep(currentStep - 1));
-            dispatch(setCompletedSteps(completedSteps - 1));
-          }}
-        />
+//       <div className="w-full flex items-center justify-end gap-2 mt-10">
+//         <MainButton
+//           buttonText={"Back"}
+//           height={"30px"}
+//           width={"15%"}
+//           minWidth="63px"
+//           type="primary"
+//           color="#ffffff"
+//           paddingY="2px"
+//           htmlType={"button"}
+//           onClick={() => {
+//             dispatch(setCurrentStep(currentStep - 1));
+//             dispatch(setCompletedSteps(completedSteps - 1));
+//           }}
+//         />
 
-        <MainButton
-          buttonText={"Next"}
-          height={"30px"}
-          width={"15%"}
-          minWidth="63px"
-          type="primary"
-          color="#ffffff"
-          paddingY="2px"
-          htmlType={"button"}
-          disabled={!uploadSuccess}
-          onClick={() => {
-            dispatch(setCurrentStep(currentStep + 1));
-            dispatch(setCompletedSteps(completedSteps + 1));
-          }}
-        />
-      </div>
-    </div>
-  );
-}
+//         <MainButton
+//           buttonText={"Next"}
+//           height={"30px"}
+//           width={"15%"}
+//           minWidth="63px"
+//           type="primary"
+//           color="#ffffff"
+//           paddingY="2px"
+//           htmlType={"button"}
+//           disabled={!uploadSuccess}
+//           onClick={() => {
+//             dispatch(setCurrentStep(currentStep + 1));
+//             dispatch(setCompletedSteps(completedSteps + 1));
+//           }}
+//         />
+//       </div>
+//     </div>
+//   );
+// }

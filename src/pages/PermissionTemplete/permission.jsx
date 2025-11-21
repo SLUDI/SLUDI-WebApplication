@@ -56,7 +56,7 @@ const Permission = () => {
 
   const posts = organizationTemplateData?.data;
 
-  console.log(posts);
+  //console.log(posts);
 
   if (isLoading) {
     return (

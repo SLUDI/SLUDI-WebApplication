@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 import Login from "../../assets/images/login";
 import Sllogo from "../../assets/images/SLlogo";
 import { useDispatch } from "react-redux";
-import { setRole } from "../../redux/loginSlice";
+
 import { authLogin } from "../../hooks/auth";
 import {
   setData,
@@ -42,12 +42,11 @@ import {
   setToken,
 } from "../../redux/authSlice";
 import { setLocalStorageData } from "../../utils/localStorageHelper";
-import axios from "axios";
 
 const Signin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loginType, setLoginType] = useState("");
+  //const [loginType, setLoginType] = useState("");
   const [showApplyForm, setShowApplyForm] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -172,7 +171,7 @@ const Signin = () => {
   ];
 
   const handleSubmit = (values) => {
-    console.log(values);
+    //console.log(values);
     mutate(values, {
       onSuccess: (res) => {
         message.success("Organization created successfully!");
@@ -181,8 +180,8 @@ const Signin = () => {
         // Calculate token expiry time (current time + expiresIn milliseconds)
         const expiryTime = Date.now() + res?.data?.expiresIn;
 
-        console.log("Token expires in:", res?.data?.expiresIn, "ms");
-        console.log("Token expiry timestamp:", expiryTime);
+        // console.log("Token expires in:", res?.data?.expiresIn, "ms");
+        // console.log("Token expiry timestamp:", expiryTime);
 
         dispatch(setRoleCode(res?.data?.roleCode));
         dispatch(setToken(res?.data?.accessToken));
@@ -322,7 +321,7 @@ const Signin = () => {
                 <button
                   className="flex items-center space-x-1 hover:text-blue-200 transition"
                   onClick={() => {
-                    setLoginType("Administrator");
+                    //setLoginType("Administrator");
                     setShowLoginModal(true);
                   }}
                 >
@@ -389,7 +388,7 @@ const Signin = () => {
                 <div className="border-t border-blue-800 pt-4">
                   <button
                     onClick={() => {
-                      setLoginType("User");
+                      //setLoginType("User");
                       setShowLoginModal(true);
                       setIsMenuOpen(false);
                     }}
@@ -397,17 +396,6 @@ const Signin = () => {
                   >
                     <User className="w-4 h-4" />
                     <span>User Login</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setLoginType("Administrator");
-                      setShowLoginModal(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center space-x-2 w-full text-left hover:text-blue-200 transition"
-                  >
-                    <UserCog className="w-4 h-4" />
-                    <span>Administrator Login</span>
                   </button>
                 </div>
               </div>

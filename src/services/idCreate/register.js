@@ -46,11 +46,11 @@ export const registerCitizen = async (data) => {
     location: data.location,
   };
 
-  console.log("🧾 Params to be sent:", params);
-  console.log("📎 Files in FormData:");
-  for (let pair of formData.entries()) {
-    console.log(pair[0] + ":", pair[1]);
-  }
+  //console.log("🧾 Params to be sent:", params);
+  // console.log("📎 Files in FormData:");
+  // for (let pair of formData.entries()) {
+  //   console.log(pair[0] + ":", pair[1]);
+  // }
 
   const response = await axiosInstance.post(
     endpoints.CITIZEN_REGISTER,

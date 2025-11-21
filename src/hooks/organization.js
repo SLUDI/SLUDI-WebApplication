@@ -11,8 +11,12 @@ import {
 
 // Register Mutation
 export const useOrganizationCreate = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: creteOrganization,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["organization"]);
+    },
   });
 };
 
