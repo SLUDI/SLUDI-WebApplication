@@ -1,12 +1,55 @@
-# React + Vite
+# SLUDI Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive web application for managing digital identities, driving license issuance, and organization permissions.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Authentication**: Secure sign-in and token-based session management.
+- **Dashboard & Analytics**: Visual insights and reporting.
+- **Identity Management**: Digital ID verification, booking, and form handling.
+- **License Services**: Driving license requests, issuance, and status tracking.
+- **Organization & User Management**: Role-based access and organization administration.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React, Vite, Tailwind CSS, Ant Design
+- **State Management**: Redux Toolkit
+- **Routing**: React Router DOM
+- **Utilities**: Axios, Face-api.js, Framer Motion, React Webcam
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/SLUDI/SLUDI-WebApplication.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd SLUDI-WebApplication
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Usage
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173` (or the port shown in your terminal).
+
+## Project Structure
+
+- `src/api`: API integration logic
+- `src/assets`: Static assets (images, icons)
+- `src/components`: Reusable UI components
+- `src/hooks`: Custom React hooks
+- `src/pages`: Application pages/views
+- `src/redux`: Redux store and slices
+- `src/routes`: Routing configuration
+- `src/services`: Business logic services
+- `src/utils`: Helper functions and utilities

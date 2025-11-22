@@ -5,7 +5,7 @@ import Dashboard from "../pages/Dashboard/dashboard";
 import UserMangement from "../pages/userManagement/User mangement";
 import IdVerification from "../pages/idVerification/IdVerification";
 import PendingIds from "../pages/pendingId/PendingIds";
-import ReportAnalytic from "../pages/reportAnalitic/reportAnalytic";
+import ReportAnalytic from "../pages/reportAnalitic/ReportAnalytic";
 import PersonalDetails from "../pages/personalDetails/personalDetails";
 import AdminPanel from "../pages/AdminiPanel/AdminPanel";
 import DigitalIdentityForm from "../pages/signin/DigitalIdentityForm";
