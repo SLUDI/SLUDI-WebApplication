@@ -1,5 +1,7 @@
 import { ConfigProvider, theme } from "antd";
 import RouterSet from "./routes/RouterSet";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const algorithm = "light";
@@ -83,11 +85,22 @@ function App() {
       }}
     >
       <div
-        className={`${
-          algorithm === "dark" ? "dark-mode-color" : "light-mode-color"
-        }`}
+        className={`${algorithm === "dark" ? "dark-mode-color" : "light-mode-color"
+          }`}
       >
         <RouterSet />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </ConfigProvider>
   );
