@@ -1,9 +1,8 @@
 import React from "react";
-import { DatePicker, Form, Input, Select, Typography, message } from "antd";
+import { DatePicker, Form, Input, Select, Typography } from "antd";
 import MainButton from "../../../components/baseComponents/button/MainButton";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useRegister } from "../../../hooks/idCreate";
 import { useLocation } from "react-router-dom";
 
 const { Text } = Typography;
@@ -15,62 +14,23 @@ export default function Step1() {
   const completedSteps = useSelector((state) => state.step.completedSteps);
   const location = useLocation();
 
-  // ✅ Retrieve user data passed via navigate
-  const {
-    userId,
-    fullName,
-    dateofBirth,
-    nic,
-    phone,
-    address,
-    email,
-    age,
-    gender,
-  } = location.state || {};
+  const { fullName, nic, phone, address, email, age, gender } =
+    location.state || {};
 
-  console.log("User Info Received:", {
-    userId,
-    fullName,
-    email,
-    nic,
-    phone,
-    dateofBirth,
-  });
-
-  const { mutate, isPending } = useRegister();
-
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-    const payload = {
-      nic: values.nicNumber,
-      deviceInfo: {
-        deviceId: "web-frontend",
-        deviceType: "browser",
-        os: window.navigator.platform,
-        ipAddress: "0.0.0.0",
-        location: "",
-      },
-    };
-
-    mutate(payload, {
-      onSuccess: (res) => {
-        message.success(
-          res.response?.data?.message || "Registration successful!"
-        );
-        dispatch(setCurrentStep(currentStep + 1));
-        dispatch(setCompletedSteps(completedSteps + 1));
-      },
-      onError: (err) => {
-        message.error(err.response?.data?.message || "Registration failed");
-      },
-    });
-  };
+  // console.log("User Info Received:", {
+  //   userId,
+  //   fullName,
+  //   email,
+  //   nic,
+  //   phone,
+  //   dateofBirth,
+  // });
 
   return (
     <div className="w-2/3 bg-[#ffffff] p-6 mt-10 ">
       <Form
         className="w-full"
-        onFinish={onFinish}
+        //onFinish={onFinish}
         initialValues={{
           name: fullName,
           //dob: dateofBirth,
@@ -158,7 +118,7 @@ export default function Step1() {
         <div className="w-full flex items-center justify-end gap-2 mt-10">
           <Form.Item className="w-[20%]">
             <MainButton
-              buttonText={isPending ? "Registering..." : "Next"}
+              buttonText="Next"
               height="30px"
               width="100%"
               minWidth="63px"
@@ -166,7 +126,11 @@ export default function Step1() {
               color="#ffffff"
               paddingY="2px"
               htmlType="submit"
-              disabled={isPending}
+              //disabled={isPending}
+              onClick={() => {
+                dispatch(setCurrentStep(currentStep + 1));
+                dispatch(setCompletedSteps(completedSteps + 1));
+              }}
             />
           </Form.Item>
         </div>

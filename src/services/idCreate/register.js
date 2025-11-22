@@ -15,6 +15,10 @@ export const registerCitizen = async (data) => {
     });
   }
 
+  if (data.profilePhoto) {
+    formData.append("profilePhoto", data.profilePhoto);
+  }
+
   const params = {
     fullName: data.fullName,
     age: data.age,
@@ -42,11 +46,11 @@ export const registerCitizen = async (data) => {
     location: data.location,
   };
 
-  console.log("🧾 Params to be sent:", params);
-  console.log("📎 Files in FormData:");
-  for (let pair of formData.entries()) {
-    console.log(pair[0] + ":", pair[1]);
-  }
+  //console.log("🧾 Params to be sent:", params);
+  // console.log("📎 Files in FormData:");
+  // for (let pair of formData.entries()) {
+  //   console.log(pair[0] + ":", pair[1]);
+  // }
 
   const response = await axiosInstance.post(
     endpoints.CITIZEN_REGISTER,
@@ -97,4 +101,37 @@ export const dateAvailability = async ({ district, daysAhead = 30 }) => {
   return response.data;
 };
 
-export default { registerUser, registerCitizen, dateAvailability };
+export const saveBiometricData = async (data) => {
+  const response = await axiosInstance.post(
+    endpoints.SAVE_BIOMETRIC_DATA,
+    data
+  );
+  return response.data;
+};
+
+// export const generateCredential = async (did) => {
+//   const response = await axiosInstance.post(
+//     `${endpoints.CREDENTIAL}?did=${did}`
+//   );
+//   return response.data;
+// };
+
+export const generateCredential = async (did) => {
+  const response = await axiosInstance.post(`${endpoints.CREDENTIAL}/${did}`);
+  return response.data;
+};
+
+// export const approveOrganizationUser = async (userId) => {
+//   const res = await axiosInstance.post(
+//     `${endpoints.ORGNIZATION_USER}/${userId}/approve`
+//   );
+//   return res.data;
+// };
+
+export default {
+  registerUser,
+  registerCitizen,
+  dateAvailability,
+  saveBiometricData,
+  generateCredential,
+};

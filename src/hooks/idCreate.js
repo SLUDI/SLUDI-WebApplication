@@ -1,8 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   registerUser,
   registerCitizen,
   dateAvailability,
+  saveBiometricData,
+  generateCredential,
 } from "../services/idCreate/register";
 import {
   idverification,
@@ -38,7 +40,36 @@ export const useDateAvailability = () => {
 };
 
 export const useAppoinment = () => {
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: appoinmentConfirm,
+    onSuccess: () => qc.invalidateQueries(["idVerification"]),
   });
 };
+
+export const useSaveBiometricData = () => {
+  return useMutation({
+    mutationFn: saveBiometricData,
+  });
+};
+
+export const useGenerateCredential = () => {
+  return useMutation({
+    mutationFn: (did) => generateCredential(did),
+  });
+};
+
+// export const useApproveUser = () => {
+//   const qc = useQueryClient();
+//   return useMutation({
+//     mutationFn: (userId) => approveOrganizationUser(userId),
+//     onSuccess: () => qc.invalidateQueries(["organizationUser"]),
+//   });
+// };
+
+// //aprove
+// export const useApproveUser = () => {
+//   return useMutation({
+//     mutationFn: (did) => generateCredential(did),
+//   });
+// };

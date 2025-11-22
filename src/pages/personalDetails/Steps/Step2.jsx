@@ -1,250 +1,295 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
-import {
-  loadModels,
-  detectFaceScore,
-  getFaceDescriptor,
-  compareFaces,
-  drawFaceElements,
-} from "../../../utils/faceProcessor";
-import { Flex, Form, Progress } from "antd";
+import { Flex, Form, Progress, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
 import MainButton from "../../../components/baseComponents/button/MainButton";
-
-const videoConstraints = {
-  width: 400,
-  height: 400,
-  facingMode: "user",
-};
+import { FcOk } from "react-icons/fc";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "../../../utils/localStorageHelper";
 
 export default function Step2() {
-  const webcamRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [score, setScore] = useState(null);
-  const [imageSrc, setImageSrc] = useState(null);
-  const [status, setStatus] = useState("Waiting");
-  const [loading, setLoading] = useState(true);
-  const [modelsReady, setModelsReady] = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
-  const [referenceDescriptor, setReferenceDescriptor] = useState(null);
-  const [faceData, setFaceData] = useState(null);
-
   const dispatch = useDispatch();
   const currentStep = useSelector((state) => state.step.currentStep);
   const completedSteps = useSelector((state) => state.step.completedSteps);
+  //const location = useLocation();
+  //const { userId } = location.state || {};
 
-  // Load face-api.js models
-  useEffect(() => {
-    async function initialize() {
-      try {
-        await loadModels();
-        setModelsReady(true);
-        setLoading(false);
-        startFaceDetection();
-      } catch (error) {
-        console.error("Failed to load models:", error);
-        setStatus("Error loading face detection");
-        setLoading(false);
-      }
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const [recording, setRecording] = useState(false);
+  const [instruction, setInstruction] = useState("Get ready...");
+  const [progress, setProgress] = useState(0);
+  //const [chunks, setChunks] = useState([]);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  //const [videoBlob, setVideoBlob] = useState(null);
+  const [extractedEmbedding, setExtractedEmbedding] = useState([]);
+
+  const instructions = [
+    "Look straight",
+    "Move your face up",
+    "Move your face down",
+    "Turn your face left",
+    "Turn your face right",
+    "Smile slightly",
+    "Done! Please wait...",
+  ];
+
+  // Store embedding in localStorage
+  const storeEmbeddingInLocalStorage = (embedding) => {
+    try {
+      //localStorage.setItem("face_embedding", JSON.stringify(embedding));
+      //localStorage.setItem("embedding_timestamp", new Date().toISOString());
+
+      setLocalStorageData("face_embedding", JSON.stringify(embedding));
+      setLocalStorageData("embedding_timestamp", new Date().toISOString());
+      // console.log(
+      //   "Embedding stored in localStorage:",
+      //   embedding.length,
+      //   "dimensions"
+      // );
+      message.success("Face features extracted and stored successfully!");
+    } catch (error) {
+      console.error("Error storing embedding in localStorage:", error);
+      message.error("Failed to store face features locally.");
     }
-    initialize();
-  }, []);
+  };
 
-  // Start face detection on webcam stream
-  const startFaceDetection = () => {
-    if (!modelsReady) return;
+  // Access webcam
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      return stream;
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+      message.error("Failed to access camera. Please check permissions.");
+      return null;
+    }
+  };
 
-    const video = webcamRef.current?.video;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
+  // Upload video to backend
+  const uploadVideoToBackend = async (blob) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", blob, "face_capture.webm");
 
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const detect = async () => {
-      try {
-        const result = await detectFaceScore(video);
-        setFaceData(result);
-
-        if (result) {
-          drawFaceElements(canvas, result);
-          const resultScore = Math.min(
-            100,
-            Math.floor(
-              result.detection.score * 100 +
-                result.landmarks.positions.length / 10
-            )
-          );
-          setScore(resultScore);
-        } else {
-          const ctx = canvas.getContext("2d");
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const response = await fetch(
+        "https://Ishan1998-Feature.hf.space/extract",
+        {
+          method: "POST",
+          body: formData,
         }
-      } catch (error) {
-        console.error("Face detection error:", error);
+      );
+
+      if (!response.ok) {
+        setInstruction("Error video processing again capture");
+        throw new Error(`Upload failed with status: ${response.status}`);
+      } else {
+        setInstruction("Successfully Processed! Go to next step or recapture");
       }
 
-      requestAnimationFrame(detect);
+      const result = await response.json();
+      // console.log("Upload successful:", result);
+
+      // Extract and store the embedding
+      if (result.embedding && Array.isArray(result.embedding)) {
+        setExtractedEmbedding(result.embedding);
+        storeEmbeddingInLocalStorage(result.embedding);
+      } else {
+        console.warn("No embedding found in response:", result);
+        message.warning("No face features extracted. Please try again.");
+      }
+
+      setUploadSuccess(true);
+      message.success("Video uploaded and features extracted successfully!");
+
+      // Hide video and show success message
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      message.error("Failed to upload video. Please try again.");
+      setUploadSuccess(false);
+      throw error;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Process recorded video
+  const processRecordedVideo = (recordedChunks) => {
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    //setVideoBlob(blob);
+
+    // Create URL for download (optional)
+    // const url = URL.createObjectURL(blob);
+
+    // Upload to backend
+    uploadVideoToBackend(blob);
+  };
+
+  // Start recording and show instructions
+  const startRecording = async () => {
+    setUploadSuccess(false);
+    setExtractedEmbedding([]);
+    const stream = await startCamera();
+    if (!stream) return;
+
+    const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+    mediaRecorderRef.current = recorder;
+    const localChunks = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        localChunks.push(e.data);
+      }
     };
 
-    detect();
-  };
+    recorder.onstop = () => {
+      //setChunks(localChunks);
+      stream.getTracks().forEach((track) => track.stop());
+      processRecordedVideo(localChunks);
+    };
 
-  // Auto-capture after clicking "Capture"
-  useEffect(() => {
-    if (!isCapturing || !modelsReady || imageSrc) return;
+    recorder.start();
+    setRecording(true);
+    setProgress(0);
 
-    const interval = setInterval(async () => {
-      if (score >= 80) {
-        const image = webcamRef.current.getScreenshot();
-        setImageSrc(image);
-        setStatus("Success");
-        setIsCapturing(false);
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < instructions.length) {
+        setInstruction(instructions[i]);
+        setProgress(((i + 1) / instructions.length) * 100);
+        i++;
+      } else {
         clearInterval(interval);
-
-        // Compute face descriptor
-        const img = new Image();
-        img.src = image;
-        img.onload = async () => {
-          try {
-            const result = await getFaceDescriptor(img);
-            if (result) {
-              setFaceData(result);
-              if (referenceDescriptor) {
-                const comparison = await compareFaces(
-                  referenceDescriptor.descriptor,
-                  result.descriptor
-                );
-                setStatus(
-                  comparison.isMatch ? "Verified" : "Verification Failed"
-                );
-              } else {
-                setReferenceDescriptor(result);
-                setStatus("Face captured successfully");
-              }
-            }
-          } catch (error) {
-            console.error("Error processing face descriptor:", error);
-            setStatus("Error processing face");
-          }
-        };
+        recorder.stop();
+        setRecording(false);
+        setInstruction("Processing video...");
       }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isCapturing, modelsReady, imageSrc, referenceDescriptor, score]);
-
-  const startCapture = () => {
-    if (!modelsReady) {
-      setStatus("Face detection not ready yet");
-      return;
-    }
-
-    setScore(null);
-    setImageSrc(null);
-    setStatus("Processing...");
-    setIsCapturing(true);
+    }, 2000);
   };
 
-  const reset = () => {
-    setScore(null);
-    setImageSrc(null);
-    setStatus("Waiting");
-    setIsCapturing(false);
-    setFaceData(null);
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Reset and start over
+  const resetCapture = () => {
+    setUploadSuccess(false);
+    //setVideoBlob(null);
+    setExtractedEmbedding([]);
+    setInstruction("Get ready...");
+    setProgress(0);
+
+    // Clear stored embedding
+    localStorage.removeItem("face_embedding");
+    localStorage.removeItem("embedding_timestamp");
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
     }
   };
+
+  // Check if embedding exists in localStorage on component mount
+  React.useEffect(() => {
+    const storedEmbedding = getLocalStorageData("face_embedding");
+    if (storedEmbedding) {
+      try {
+        const embedding = JSON.parse(storedEmbedding);
+        setExtractedEmbedding(embedding);
+        setUploadSuccess(true);
+        setInstruction(
+          "Features already extracted. You can recapture or proceed."
+        );
+      } catch (error) {
+        console.error("Error parsing stored embedding:", error);
+      }
+    }
+  }, []);
 
   return (
     <div className="w-2/3 bg-[#ffffff] p-6 mt-10 ">
-      {loading ? (
-        <div className="text-center py-8">Loading face detection models...</div>
-      ) : (
-        <div className="grid grid-cols-2 gap-8  p-6">
-          {/* Webcam or Image Section */}
-          <div className="flex flex-col items-center justify-center mt-4  bg-[#D9D9D9] py-8 relative">
-            {!imageSrc ? (
-              <>
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  videoConstraints={videoConstraints}
-                  className="rounded-md border w-[350px] h-[350px]"
-                />
-                <canvas
-                  ref={canvasRef}
-                  className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                  style={{ width: "350px", height: "350px" }}
-                />
-              </>
-            ) : (
-              <div className="relative">
-                <img
-                  src={imageSrc}
-                  alt="Captured face"
-                  className="rounded-md w-[350px] h-[350px]"
-                />
-                {faceData && (
-                  <canvas
-                    ref={canvasRef}
-                    className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                    style={{ width: "350px", height: "350px" }}
-                  />
-                )}
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800 mt-4">
+          Face Capture & Feature Extraction
+        </h2>
+
+        {uploadSuccess ? (
+          <div className="flex flex-col items-center justify-center w-100 h-80 rounded-xl shadow-lg border border-gray-300 bg-green-50">
+            <FcOk className="text-6xl mb-4" />
+            <p className="text-xl font-semibold text-green-600">
+              Features Extracted Successfully!
+            </p>
+            <p className="text-gray-600 mt-2">
+              {extractedEmbedding.length > 0
+                ? `Embedding stored: ${extractedEmbedding.length} dimensions`
+                : "Face features processed and stored"}
+            </p>
+            {extractedEmbedding.length > 0 && (
+              <div className="mt-2 p-2 bg-gray-100 rounded text-xs max-w-full overflow-hidden">
+                <p className="truncate">
+                  Sample: [
+                  {extractedEmbedding
+                    .slice(0, 3)
+                    .map((num) => num.toFixed(4))
+                    .join(", ")}
+                  ...]
+                </p>
               </div>
             )}
           </div>
+        ) : (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300"
+          />
+        )}
 
-          <div className="flex flex-col items-center justify-center text-center ">
-            <div className="flex items-center justify-center mt-10">
-              <Flex gap="large" wrap className="mt-10">
-                <Progress type="circle" percent={score ?? 0} />
-              </Flex>
-            </div>
+        <div className="mt-4 text-lg font-medium text-black">{instruction}</div>
 
-            <p className="mt-4 font-semibold text-gray-700">
-              Picture Capture Status - {status === "Success" ? "OK" : status}
-            </p>
-
-            {/* Buttons */}
-            <div className="mt-8 space-x-4 flex flex-row">
-              <MainButton
-                buttonText={" Reset"}
-                height={"30px"}
-                width={"80%"}
-                minWidth="63px"
-                type="primary"
-                color="#ffffff"
-                paddingY="2px"
-                htmlType={"submit"}
-                onClick={reset}
-                buttonColor="#DC0000"
-              />
-
-              <MainButton
-                buttonText={"Capture"}
-                height={"30px"}
-                width={"80%"}
-                minWidth="63px"
-                type="primary"
-                color="#ffffff"
-                paddingY="2px"
-                htmlType={"submit"}
-                onClick={startCapture}
-                disabled={isCapturing || imageSrc}
-                buttonColor="#1FC41A"
-              />
-            </div>
-          </div>
+        <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
+          <div
+            className={`${
+              uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
+            }  h-2.5 rounded-full transition-all duration-500`}
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
-      )}
+
+        {uploadSuccess ? (
+          <button
+            onClick={resetCapture}
+            className="mt-6 px-6 py-2 rounded-lg text-white font-semibold transition bg-green-600 hover:bg-green-700"
+          >
+            Capture Again
+          </button>
+        ) : (
+          <button
+            onClick={startRecording}
+            disabled={recording || uploading}
+            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
+              recording || uploading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#13A4B4] "
+            }`}
+          >
+            {uploading
+              ? "Uploading..."
+              : recording
+              ? "Recording..."
+              : "Start Capture"}
+          </button>
+        )}
+      </div>
 
       <div className="w-full flex items-center justify-end gap-2 mt-10">
         <MainButton
@@ -255,7 +300,7 @@ export default function Step2() {
           type="primary"
           color="#ffffff"
           paddingY="2px"
-          htmlType={"submit"}
+          htmlType={"button"}
           onClick={() => {
             dispatch(setCurrentStep(currentStep - 1));
             dispatch(setCompletedSteps(completedSteps - 1));
@@ -270,7 +315,8 @@ export default function Step2() {
           type="primary"
           color="#ffffff"
           paddingY="2px"
-          htmlType={"submit"}
+          htmlType={"button"}
+          disabled={!uploadSuccess}
           onClick={() => {
             dispatch(setCurrentStep(currentStep + 1));
             dispatch(setCompletedSteps(completedSteps + 1));

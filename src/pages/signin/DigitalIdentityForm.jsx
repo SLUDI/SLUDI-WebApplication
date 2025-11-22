@@ -39,8 +39,8 @@ const DigitalIdentityForm = () => {
   const selectDate = useSelector((state) => state.availableDate.date);
   const selectDistrict = useSelector((state) => state.availableDate.distric);
 
-  console.log("Selected Date from Redux:", selectDate);
-  console.log("Selected District from Redux:", selectDistrict);
+  //console.log("Selected Date from Redux:", selectDate);
+  //console.log("Selected District from Redux:", selectDistrict);
 
   const deviceInfo = useDeviceInfo();
 
@@ -69,10 +69,11 @@ const DigitalIdentityForm = () => {
       supportingDocuments: supportingDocs,
       selectDate,
       selectDistrict,
+      profilePhoto: values.profilePhoto[0].originFileObj,
     };
 
-    console.log("Payload to submit:", payload);
-    console.log("Device Info:", deviceInfo);
+    //console.log("Payload to submit:", payload);
+    //console.log("Device Info:", deviceInfo);
 
     mutate(payload, {
       onSuccess: (res) => {
@@ -651,6 +652,36 @@ const DigitalIdentityForm = () => {
                             label="Birth Certificate Back"
                             required
                           />
+                        </Upload>
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-700">
+                      Profile photo
+                    </h4>
+                    <div className="space-y-4">
+                      <Form.Item
+                        name="profilePhoto"
+                        valuePropName="fileList"
+                        getValueFromEvent={(e) =>
+                          Array.isArray(e) ? e : e && e.fileList
+                        }
+                        // rules={[
+                        //   {
+                        //     required: true,
+                        //     message: "Please upload Birth Certificate front",
+                        //   },
+                        // ]}
+                      >
+                        <Upload
+                          beforeUpload={() => false}
+                          maxCount={1}
+                          accept="image/*"
+                          listType="picture"
+                          className="upload-section"
+                        >
+                          <UploadButton label="Profile photo" required />
                         </Upload>
                       </Form.Item>
                     </div>

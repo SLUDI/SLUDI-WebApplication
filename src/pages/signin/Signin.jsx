@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import {
   Shield,
   Smartphone,
@@ -30,13 +30,28 @@ import Mobile from "../../assets/images/mobile";
 import { useNavigate } from "react-router-dom";
 import Login from "../../assets/images/login";
 import Sllogo from "../../assets/images/SLlogo";
+import { useDispatch } from "react-redux";
+
+import { authLogin } from "../../hooks/auth";
+import {
+  setData,
+  setExpiresIn,
+  setOrganizationId,
+  setRefreshToken,
+  setRoleCode,
+  setToken,
+} from "../../redux/authSlice";
+import { setLocalStorageData } from "../../utils/localStorageHelper";
 
 const Signin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loginType, setLoginType] = useState("");
+  //const [loginType, setLoginType] = useState("");
   const [showApplyForm, setShowApplyForm] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { mutate, isPending } = authLogin();
 
   // Animation on scroll
   useEffect(() => {
@@ -155,57 +170,118 @@ const Signin = () => {
     },
   ];
 
+  const handleSubmit = (values) => {
+    //console.log(values);
+    mutate(values, {
+      onSuccess: (res) => {
+        message.success("Organization created successfully!");
+
+        // expiresIn is already in milliseconds (e.g., 3600000ms = 1 hour)
+        // Calculate token expiry time (current time + expiresIn milliseconds)
+        const expiryTime = Date.now() + res?.data?.expiresIn;
+
+        // console.log("Token expires in:", res?.data?.expiresIn, "ms");
+        // console.log("Token expiry timestamp:", expiryTime);
+
+        dispatch(setRoleCode(res?.data?.roleCode));
+        dispatch(setToken(res?.data?.accessToken));
+        dispatch(setOrganizationId(res?.data?.organizationId));
+        dispatch(setData(res?.data));
+        dispatch(setRefreshToken(res?.data?.refreshToken));
+        dispatch(setExpiresIn(res?.data?.expiresIn));
+
+        // Securely store token and user info
+        setLocalStorageData("token", res?.data?.accessToken);
+        setLocalStorageData("organizationId", res?.data?.organizationId);
+        setLocalStorageData("roleCode", res?.data?.roleCode);
+        setLocalStorageData("data", res?.data);
+        setLocalStorageData("refreshToken", res?.data?.refreshToken);
+        setLocalStorageData("expiresIn", res?.data?.expiresIn);
+        setLocalStorageData("tokenExpiryTime", expiryTime);
+
+        // Navigate after storing
+        if (
+          res?.data?.roleCode === "ADMIN" &&
+          res?.data?.organizationId === 1
+        ) {
+          navigate("/dashboard");
+        } else if (
+          res?.data?.roleCode === "ADMIN" &&
+          res?.data?.organizationId !== 1
+        ) {
+          navigate("/organizationUser");
+        } else {
+          navigate("/sign-in");
+        }
+      },
+      onError: (error) => {
+        console.error("Error creating organization:", error);
+        message.error(
+          error?.response?.data?.message || "Failed to create organization"
+        );
+      },
+    });
+  };
+
   const LoginModal = () => (
-    <div className="fixed inset-0  bg-opacity-0 flex items-center justify-center z-50">
-      <div className="bg-[#DFEFFF] rounded-2xl p-8 max-w-md w-full mx-4">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-900">
-            {loginType} Login
-          </h3>
+    <div className="fixed inset-0  bg-opacity-0 flex items-center justify-center z-50 bo">
+      <div className="bg-white border border-[#13A4B4] rounded-2xl p-8 max-w-md w-full mx-4">
+        <div className="flex justify-end items-end mb-1">
           <button
             onClick={() => setShowLoginModal(false)}
-            className="text-red-600 hover:text-gray-700"
+            className="text-gray-700"
           >
-            <X className="w-6 h-6" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         <div className="flex justify-center items-center">
-          <Sllogo className="w-25 h-25 justify-center items-center" />
+          <Sllogo className="w-40 h-40 justify-center items-center" />
         </div>
 
-        <Form className="space-y-6 w-full">
+        <Form className="space-y-6 w-full" onFinish={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
             </label>
-            <Input
-              type="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder={`Enter your ${loginType} email`}
-            />
+            <Form.Item
+              name="usernameOrEmail"
+              rules={[
+                { required: true, message: "Please enter email address" },
+              ]}
+            >
+              <Input placeholder="Text field data" size="large" />
+            </Form.Item>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
             </label>
-            <Input.Password
-              type="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter your password"
-            />
+            <Form.Item name="password">
+              <Input.Password
+                type="password"
+                size="large"
+                placeholder="Enter your password"
+              />
+            </Form.Item>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              loginType === "Administrator"
-                ? navigate("/admin")
-                : navigate("/dashboard");
-            }}
+
+          <Button
+            type="primary"
+            htmlType="submit"
             className="w-full bg-[#13A4B4] text-white py-3 rounded-lg  transition font-semibold"
+            // onClick={() => {
+            //   if (loginType === "Administrator") {
+            //     dispatch(setRole("SuperAdmin"));
+            //     navigate("/organization");
+            //   } else {
+            //     dispatch(setRole("Admin"));
+            //     navigate("/dashboard");
+            //   }
+            // }}
+            loading={isPending}
           >
-            Login to{" "}
-            {loginType === "Administrator" ? "Admin Panel" : "Dashboard"}
-          </button>
+            Login
+          </Button>
         </Form>
       </div>
     </div>
@@ -242,12 +318,17 @@ const Signin = () => {
 
               {/* Login Dropdown */}
               <div className="relative group">
-                <button className="flex items-center space-x-1 hover:text-blue-200 transition">
+                <button
+                  className="flex items-center space-x-1 hover:text-blue-200 transition"
+                  onClick={() => {
+                    //setLoginType("Administrator");
+                    setShowLoginModal(true);
+                  }}
+                >
                   <User className="w-4 h-4" />
                   <span>Login</span>
-                  <ChevronRight className="w-4 h-4 transform group-hover:rotate-90 transition-transform" />
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                {/* <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                   <button
                     onClick={() => {
                       setLoginType("Admin User");
@@ -268,7 +349,7 @@ const Signin = () => {
                     <UserCog className="w-4 h-4" />
                     <span>Administrator</span>
                   </button>
-                </div>
+                </div> */}
               </div>
             </nav>
 
@@ -307,7 +388,7 @@ const Signin = () => {
                 <div className="border-t border-blue-800 pt-4">
                   <button
                     onClick={() => {
-                      setLoginType("User");
+                      //setLoginType("User");
                       setShowLoginModal(true);
                       setIsMenuOpen(false);
                     }}
@@ -315,17 +396,6 @@ const Signin = () => {
                   >
                     <User className="w-4 h-4" />
                     <span>User Login</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setLoginType("Administrator");
-                      setShowLoginModal(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center space-x-2 w-full text-left hover:text-blue-200 transition"
-                  >
-                    <UserCog className="w-4 h-4" />
-                    <span>Administrator Login</span>
                   </button>
                 </div>
               </div>

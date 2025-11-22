@@ -5,7 +5,7 @@ import { useAppoinment } from "../../../hooks/idCreate";
 const { Text } = Typography;
 
 export default function Verify({ open, onCancel, user }) {
-  console.log("User Details:", user);
+  //console.log("User Details:", user);
 
   const {
     mutate: confirmAppointment,
@@ -13,64 +13,14 @@ export default function Verify({ open, onCancel, user }) {
     isPending: isConfirming,
   } = useAppoinment();
 
-  // // Handle approve button click
-  // const handleApprove = () => {
-  //   if (!user?.userId) {
-  //     message.error("User ID is missing");
-  //     return;
-  //   }
-
-  //   confirmAppointment(
-  //     {
-  //       userId: user.userId,
-  //       documentsValid: true,
-  //     },
-  //     {
-  //       onSuccess: () => {
-  //         message.success("Appointment approved successfully!");
-  //         onCancel(); // Close the modal
-  //       },
-  //       onError: (error) => {
-  //         message.error("Failed to approve appointment");
-  //         console.error("Approve error:", error);
-  //       },
-  //     }
-  //   );
-  // };
-
-  // // Handle reject button click
-  // const handleReject = () => {
-  //   if (!user?.userId) {
-  //     message.error("User ID is missing");
-  //     return;
-  //   }
-
-  //   confirmAppointment(
-  //     {
-  //       userId: user.userId,
-  //       documentsValid: false,
-  //     },
-  //     {
-  //       onSuccess: () => {
-  //         message.success("Appointment rejected successfully!");
-  //         onCancel(); // Close the modal
-  //       },
-  //       onError: (error) => {
-  //         message.error("Failed to reject appointment");
-  //         console.error("Reject error:", error);
-  //       },
-  //     }
-  //   );
-  // };
-
   const handleConfirm = (documentsValid) => {
     if (!user?.userId) return;
 
     confirmAppointment(
       { userId: user.userId, documentsValid },
       {
-        onSuccess: (res) => {
-          console.log("✅ Appointment Confirmed:", res);
+        onSuccess: () => {
+          //console.log(" Appointment Confirmed:", res);
           Modal.success({
             title: "Success",
             content: "Appointment confirmation updated successfully.",
@@ -78,7 +28,7 @@ export default function Verify({ open, onCancel, user }) {
           onCancel();
         },
         onError: (err) => {
-          console.error("❌ Error confirming appointment:", err);
+          console.error(" Error confirming appointment:", err);
           Modal.error({
             title: "Error",
             content: err?.response?.data?.message || "Something went wrong!",

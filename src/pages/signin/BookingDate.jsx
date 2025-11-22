@@ -77,7 +77,7 @@ export default function DigitalIdentityBookingPage() {
 
   const handleBookNow = (date) => {
     message.success(`Booking confirmed for ${selectedDistrict} on ${date}`);
-    console.log(`Booking details: ${selectedDistrict}, ${date}`);
+    //console.log(`Booking details: ${selectedDistrict}, ${date}`);
 
     dispatch(setDate(`${date}`));
     dispatch(setDistrict(`${selectedDistrict}`));
