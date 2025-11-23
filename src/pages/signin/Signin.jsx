@@ -47,7 +47,7 @@ const Signin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   //const [loginType, setLoginType] = useState("");
-  const [showApplyForm, setShowApplyForm] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -235,7 +235,7 @@ const Signin = () => {
           </button>
         </div>
         <div className="flex justify-center items-center">
-          <Sllogo className="w-40 h-40 justify-center items-center" />
+          <Sllogo className="w-40 h-40 justify-center items-center spin-vertical" />
         </div>
 
         <Form className="space-y-6 w-full" onFinish={handleSubmit}>
@@ -425,25 +425,25 @@ const Signin = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={() => navigate("/digitalIdentity")}
-                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg"
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg z-50"
               >
                 Apply Now
-              </button>
-              <button className="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-900 transition-all">
-                Learn More
               </button>
             </div>
           </div>
         </div>
 
         {/* Floating Animation Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 border border-white opacity-20 rounded-full animate-ping"></div>
-        <div className="absolute top-35 left-80 w-20 h-20 border border-white bg-sky-400 opacity-20 rounded-full animate-ping"></div>
-        <div className="absolute top-40 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
-        <div className="absolute top-60 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
-        <div className="absolute top-80 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
-        <div className="absolute bottom-40 left-40 w-25 h-25 border border-blue-400  opacity-50 rounded-full animate-ping"></div>
-        <div className="absolute bottom-20 left-20 w-25 h-25 border border-blue-400 opacity-50 rounded-full animate-ping"></div>
+
+        <div className="pointer-events-none">
+          <div className="absolute top-20 left-10 w-20 h-20 border border-white opacity-20 rounded-full animate-ping"></div>
+          <div className="absolute top-35 left-80 w-20 h-20 border border-white bg-sky-400 opacity-20 rounded-full animate-ping"></div>
+          <div className="absolute top-40 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
+          <div className="absolute top-60 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
+          <div className="absolute top-80 right-20 w-16 h-16 border border-green-400 opacity-30 rounded-full animate-bounce"></div>
+          <div className="absolute bottom-40 left-40 w-25 h-25 border border-blue-400  opacity-50 rounded-full animate-ping"></div>
+          <div className="absolute bottom-20 left-20 w-25 h-25 border border-blue-400 opacity-50 rounded-full animate-ping"></div>
+        </div>
       </section>
 
       {/* Key Features */}
@@ -580,12 +580,6 @@ const Signin = () => {
               Join thousands of Sri Lankan citizens who have already embraced
               the future of secure, decentralized identity management
             </p>
-            <button
-              onClick={() => setShowApplyForm(true)}
-              className="bg-gradient-to-r from-green-500 to-green-600 text-white px-10 py-4 rounded-full text-xl font-semibold hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg"
-            >
-              Apply for SLUID Today
-            </button>
           </div>
         </div>
       </section>
@@ -699,7 +693,6 @@ const Signin = () => {
 
       {/* Modals */}
       {showLoginModal && <LoginModal />}
-      {showApplyForm && <ApplyForm />}
 
       <style jsx>{`
         .animate-fade-in-up {
