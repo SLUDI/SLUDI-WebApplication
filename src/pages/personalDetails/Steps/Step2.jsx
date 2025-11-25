@@ -232,18 +232,6 @@ export default function Step2() {
                 ? `Embedding stored: ${extractedEmbedding.length} dimensions`
                 : "Face features processed and stored"}
             </p>
-            {extractedEmbedding.length > 0 && (
-              <div className="mt-2 p-2 bg-gray-100 rounded text-xs max-w-full overflow-hidden">
-                <p className="truncate">
-                  Sample: [
-                  {extractedEmbedding
-                    .slice(0, 3)
-                    .map((num) => num.toFixed(4))
-                    .join(", ")}
-                  ...]
-                </p>
-              </div>
-            )}
           </div>
         ) : (
           <video

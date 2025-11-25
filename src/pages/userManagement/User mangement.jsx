@@ -148,7 +148,7 @@ export default function UserMangement() {
                   <div className="col-span-4 xl:col-span-3 h-[40px] flex items-center justify-start p-3">
                     <Tooltip title="Status">
                       <Text className="t-13 font-bold pr-[1px] truncate">
-                        ID Number
+                        DID Number
                       </Text>
                     </Tooltip>
                   </div>
@@ -202,9 +202,9 @@ export default function UserMangement() {
                           </Tooltip>
                         </div>
                         <div className="col-span-4 xl:col-span-3 h-[40px] flex items-center justify-start p-3">
-                          <Tooltip title={post?.nic}>
-                            <Text className="t-13 font-bold pr-[1px] truncate  text-colorDarkDarkGray">
-                              {post?.nic}
+                          <Tooltip title={post?.didId?.split(":")[2]}>
+                            <Text className="t-13 font-bold pr-[1px]   text-colorDarkDarkGray">
+                              {post?.didId?.split(":")[2]}
                             </Text>
                           </Tooltip>
                         </div>

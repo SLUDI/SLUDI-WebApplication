@@ -6,6 +6,7 @@ import { useLicenseRequest } from "../../hooks/licenseIssue";
 import { checkLicenseStatus } from "../../services/licenseIssued/licenseIssued";
 import { setLicenseVerificationData } from "../../redux/licenseVerificationSlice"; // adjust path
 import { message } from "antd";
+import useNotification from "../../hooks/useNotification";
 
 export default function DrivingLicenseRequest() {
   const [qrGenerated, setQrGenerated] = useState(false);
@@ -13,6 +14,8 @@ export default function DrivingLicenseRequest() {
   const [verificationStatus, setVerificationStatus] = useState("idle");
   const [expiryTime, setExpiryTime] = useState(15);
   const [sessionId, setSessionId] = useState(null);
+
+  const { notifySuccess, notifyError } = useNotification();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +27,9 @@ export default function DrivingLicenseRequest() {
 
     mutate(undefined, {
       onSuccess: (res) => {
-        console.log("API Response:", res);
+        //console.log("API Response:", res);
+
+        notifySuccess(res?.message);
 
         const data = res?.data;
 
@@ -44,9 +49,8 @@ export default function DrivingLicenseRequest() {
         message.success("QR generated successfully!");
       },
 
-      onError: (error) => {
-        console.error("Error:", error);
-        message.error(error?.response?.data?.message || "Request failed");
+      onError: (err) => {
+        notifyError(err?.response?.data?.message);
       },
     });
   };
@@ -58,7 +62,7 @@ export default function DrivingLicenseRequest() {
       try {
         const res = await checkLicenseStatus(sessionId);
 
-        console.log("STATUS :", res.data.status);
+        // console.log("STATUS :", res.data.status);
 
         if (res?.data?.status === "FULFILLED") {
           setVerificationStatus("complete");

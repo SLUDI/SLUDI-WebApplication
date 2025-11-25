@@ -8,6 +8,7 @@ import { MdFingerprint } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { useSaveBiometricData } from "../../../hooks/idCreate";
 import { getLocalStorageData } from "../../../utils/localStorageHelper";
+import useNotification from "../../../hooks/useNotification";
 
 const FINGERS = [
   { id: "thumb_left", label: "Left Thumb", position: "left" },
@@ -29,6 +30,7 @@ export default function Step4() {
   const location = useLocation();
   const { userId } = location.state || {};
   const storedEmbeddingData = getLocalStorageData("face_embedding");
+  const { notifySuccess, notifyError } = useNotification();
 
   //   console.log("Ab", storedEmbeddingData);
   //   console.log(userId);
@@ -128,6 +130,7 @@ export default function Step4() {
 
     mutate(payload, {
       onSuccess: (res) => {
+        notifySuccess(res?.message);
         message.success(
           res.response?.data?.message || "Registration successful!"
         );
@@ -135,6 +138,7 @@ export default function Step4() {
         dispatch(setCompletedSteps(completedSteps + 1));
       },
       onError: (err) => {
+        notifyError(err?.response?.data?.message);
         message.error(err.response?.data?.message || "Registration failed");
       },
     });

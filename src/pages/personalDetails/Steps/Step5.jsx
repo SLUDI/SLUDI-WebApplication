@@ -10,6 +10,7 @@ import { BiCard } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGenerateCredential, useRegister } from "../../../hooks/idCreate";
 import { getLocalStorageData } from "../../../utils/localStorageHelper";
+import useNotification from "../../../hooks/useNotification";
 
 export default function Step5() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export default function Step5() {
   const currentStep = useSelector((state) => state.step.currentStep);
   const completedSteps = useSelector((state) => state.step.completedSteps);
   const location = useLocation();
+  const { notifySuccess, notifyError } = useNotification();
 
   const { userId, fullName, email, phone, address, nic, age, gender } =
     location.state || {};
@@ -77,6 +79,7 @@ export default function Step5() {
 
     mutate(payload, {
       onSuccess: (res) => {
+        notifySuccess(res?.message);
         message.success(
           res.response?.data?.message || "Registration successful!"
         );
@@ -94,10 +97,11 @@ export default function Step5() {
         generateCredential.mutate(shortDid, {
           onSuccess: () => {
             // console.log("Credential Response:", credRes);
+            notifySuccess(res?.message);
             message.success("Credential generated successfully!");
           },
-          onError: (error) => {
-            console.log("Credential Error:", error);
+          onError: (err) => {
+            notifyError(err?.response?.data?.message);
             message.error("Credential generation failed");
           },
         });
@@ -111,6 +115,7 @@ export default function Step5() {
       },
 
       onError: (err) => {
+        notifyError(err?.response?.data?.message);
         message.error(err.response?.data?.message || "Registration failed");
       },
     });

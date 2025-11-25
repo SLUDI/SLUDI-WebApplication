@@ -3,6 +3,9 @@ import endpoints from "../../api/endpoints";
 
 export const login = async (data) => {
   const response = await axiosInstance.post(endpoints.LOGIN, data);
+  if (response.data?.success === false) {
+    throw new Error(response.data?.message || "Login failed");
+  }
   return response.data;
 };
 

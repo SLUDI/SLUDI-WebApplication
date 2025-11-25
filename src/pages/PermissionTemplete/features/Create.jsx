@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Select, Button, Switch } from "antd";
 import React, { useState } from "react";
 import { useTemplateCreate } from "../../../hooks/organization";
+import useNotification from "../../../hooks/useNotification";
 
 const { TextArea } = Input;
 
@@ -9,6 +10,8 @@ export default function Create({ open, onCancel }) {
   const [userRoles, setUserRoles] = useState([
     { role: "", permissions: [], isAdmin: false, description: "" },
   ]);
+
+  const { notifySuccess } = useNotification();
 
   const { mutate, isPending } = useTemplateCreate();
 
@@ -108,7 +111,8 @@ export default function Create({ open, onCancel }) {
 
     // Pass data to backend via hook
     mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        notifySuccess(res?.message);
         form.resetFields();
         setUserRoles([
           { role: "", permissions: [], isAdmin: false, description: "" },
