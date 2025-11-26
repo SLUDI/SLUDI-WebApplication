@@ -1,25 +1,27 @@
-import { Modal, Form, Input, Select, Button, message } from "antd";
+import { Modal, Form, Input, Select, Button } from "antd";
 import React from "react";
 import { useOrganizationCreate } from "../../../hooks/organization";
+import useNotification from "../../../hooks/useNotification";
 
 export default function Create({ open, onCancel }) {
   const [form] = Form.useForm();
   const { mutate, isPending } = useOrganizationCreate();
+  const { notifySuccess, notifyError } = useNotification();
 
   const handleSubmit = (values) => {
     //console.log("Form values:", values);
 
     // Call API
     mutate(values, {
-      onSuccess: () => {
-        message.success("Organization created successfully!");
+      onSuccess: (res) => {
+        notifySuccess(res?.message);
         form.resetFields();
         onCancel();
       },
-      onError: (error) => {
-        console.error("Error creating organization:", error);
-        message.error(
-          error?.response?.data?.message || "Failed to create organization"
+      onError: (err) => {
+        console.error("Error creating organization:", err);
+        notifyError(
+          err?.response?.data?.message || "Failed to create organization"
         );
       },
     });

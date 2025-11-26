@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
 import MainButton from "../../../components/baseComponents/button/MainButton";
 import { FcOk, FcHighPriority } from "react-icons/fc";
+import { getLocalStorageData } from "../../../utils/localStorageHelper";
 
 export default function Step3() {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ export default function Step3() {
   const completedSteps = useSelector((state) => state.step.completedSteps);
 
   const [storedEmbedding, setStoredEmbedding] = useState([]);
-  //const [threshold, setThreshold] = useState(0.8);
+  const [threshold, setThreshold] = useState(0.8);
   const [verificationResult, setVerificationResult] = useState(null);
   const [similarityScore, setSimilarityScore] = useState(null);
   const [embeddingLoaded, setEmbeddingLoaded] = useState(false);
@@ -24,10 +25,8 @@ export default function Step3() {
     "Get ready for verification..."
   );
   const [progress, setProgress] = useState(0);
-  //const [chunks, setChunks] = useState([]);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  //const [videoBlob, setVideoBlob] = useState(null);
 
   const instructions = [
     "Look straight",
@@ -43,8 +42,8 @@ export default function Step3() {
   // Load embedding from localStorage
   const loadStoredEmbedding = () => {
     try {
-      const storedEmbeddingData = localStorage.getItem("face_embedding");
-      const timestamp = localStorage.getItem("embedding_timestamp");
+      const storedEmbeddingData = getLocalStorageData("face_embedding");
+      const timestamp = getLocalStorageData("embedding_timestamp");
 
       if (storedEmbeddingData) {
         const embedding = JSON.parse(storedEmbeddingData);
@@ -88,13 +87,13 @@ export default function Step3() {
   };
 
   // Verify video with embedding
-  const verifyVideoWithEmbedding = async (blob, embedding, threshold) => {
+  const verifyVideoWithEmbedding = async (blob, embedding, thresholdValue) => {
     setVerifying(true);
     try {
       const formData = new FormData();
       formData.append("file", blob, "verification_video.webm");
       formData.append("stored_embedding", JSON.stringify(embedding));
-      formData.append("threshold", threshold.toString());
+      formData.append("threshold", thresholdValue.toString());
 
       const response = await fetch(
         "https://Ishan1998-Feature.hf.space/verify-with-embedding",
@@ -146,8 +145,7 @@ export default function Step3() {
   // Process recorded video for verification
   const processVerificationVideo = (recordedChunks) => {
     const blob = new Blob(recordedChunks, { type: "video/webm" });
-    //setVideoBlob(blob);
-    verifyVideoWithEmbedding(blob, storedEmbedding);
+    verifyVideoWithEmbedding(blob, storedEmbedding, threshold);
   };
 
   // Start recording for verification
@@ -178,7 +176,6 @@ export default function Step3() {
     };
 
     recorder.onstop = () => {
-      //setChunks(localChunks);
       stream.getTracks().forEach((track) => track.stop());
       processVerificationVideo(localChunks);
     };
@@ -207,7 +204,6 @@ export default function Step3() {
     setVerificationSuccess(false);
     setVerificationResult(null);
     setSimilarityScore(null);
-    //setVideoBlob(null);
     setInstruction("Get ready for verification...");
     setProgress(0);
 
@@ -254,6 +250,31 @@ export default function Step3() {
                 </div>
               )}
             </div>
+
+            {/* Threshold Configuration */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Verification Threshold
+              </label>
+              <div className="flex items-center gap-3">
+                <Input
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={threshold}
+                  onChange={(e) => setThreshold(parseFloat(e.target.value))}
+                  placeholder="0.8"
+                  className="w-32"
+                />
+                <span className="text-sm text-gray-600">
+                  Current: {(threshold * 100).toFixed(0)}%
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Higher threshold = stricter matching (0.0 - 1.0)
+              </p>
+            </div>
           </div>
         </Card>
 
@@ -278,7 +299,7 @@ export default function Step3() {
             </p>
             {similarityScore && (
               <p className="text-gray-600 mt-2">
-                Similarity Score: {(similarityScore * 100).toFixed(2)}% 33
+                Similarity Score: {(similarityScore * 100).toFixed(2)}%
               </p>
             )}
           </div>
@@ -343,9 +364,9 @@ export default function Step3() {
                 <strong>Similarity Score:</strong>{" "}
                 {(similarityScore * 100).toFixed(2)}%
               </div>
-              {/* <div>
+              <div>
                 <strong>Threshold:</strong> {(threshold * 100).toFixed(0)}%
-              </div> */}
+              </div>
               <div>
                 <strong>Status:</strong>
                 <span

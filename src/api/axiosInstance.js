@@ -3,7 +3,6 @@ import {
   getLocalStorageData,
   setLocalStorageData,
 } from "../utils/localStorageHelper";
-import { toast } from "react-toastify";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -120,7 +119,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     // Show success notification
-    toast.success(response.data?.message || "Operation successful");
+
     return response;
   },
   async (error) => {
@@ -156,14 +155,6 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-
-    // Show error notification for non-401 errors or if retry failed
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "Something went wrong";
-
-    toast.error(errorMessage);
 
     return Promise.reject(error);
   }

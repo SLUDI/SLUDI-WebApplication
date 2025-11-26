@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd";
 import {
   Shield,
   Smartphone,
@@ -43,6 +43,8 @@ import {
 } from "../../redux/authSlice";
 import { setLocalStorageData } from "../../utils/localStorageHelper";
 
+import useNotification from "../../hooks/useNotification";
+
 const Signin = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -52,6 +54,7 @@ const Signin = () => {
   const dispatch = useDispatch();
 
   const { mutate, isPending } = authLogin();
+  const { notifySuccess, notifyError } = useNotification();
 
   // Animation on scroll
   useEffect(() => {
@@ -174,8 +177,7 @@ const Signin = () => {
     //console.log(values);
     mutate(values, {
       onSuccess: (res) => {
-        message.success("Organization created successfully!");
-
+        notifySuccess(res?.message);
         // expiresIn is already in milliseconds (e.g., 3600000ms = 1 hour)
         // Calculate token expiry time (current time + expiresIn milliseconds)
         const expiryTime = Date.now() + res?.data?.expiresIn;
@@ -214,11 +216,8 @@ const Signin = () => {
           navigate("/sign-in");
         }
       },
-      onError: (error) => {
-        console.error("Error creating organization:", error);
-        message.error(
-          error?.response?.data?.message || "Failed to create organization"
-        );
+      onError: (err) => {
+        notifyError(err?.message || "Something went wrong");
       },
     });
   };

@@ -1,22 +1,24 @@
-import { Modal, Form, Input, Select, Button, message } from "antd";
+import { Modal, Form, Input, Select, Button } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
   useOrganizationRoles,
   useOrganizationUserCreate,
 } from "../../../hooks/organizationUser";
+import useNotification from "../../../hooks/useNotification";
 
 export default function Create({ open, onCancel }) {
   const [form] = Form.useForm();
   const { mutate, isPending } = useOrganizationUserCreate();
   const organizationId = useSelector((state) => state.auth.organizationId);
+  const { notifySuccess, notifyError } = useNotification();
 
   // Fetch roles for the organization
   const { data: rolesData, isLoading: isLoadingRoles } =
     useOrganizationRoles(organizationId);
 
   const handleSubmit = (values) => {
-    console.log("Form values:", values);
+    // console.log("Form values:", values);
 
     // Prepare data with organizationId
     const payload = {
@@ -26,16 +28,14 @@ export default function Create({ open, onCancel }) {
 
     // Call API
     mutate(payload, {
-      onSuccess: () => {
-        message.success("User created successfully!");
+      onSuccess: (res) => {
+        notifySuccess(res?.message);
         form.resetFields();
         onCancel();
       },
-      onError: (error) => {
-        console.error("Error creating user:", error);
-        message.error(
-          error?.response?.data?.message || "Failed to create user"
-        );
+      onError: (err) => {
+        // console.error("Error creating user:", err);
+        notifyError(err?.response?.data?.message || "Failed to create user");
       },
     });
   };

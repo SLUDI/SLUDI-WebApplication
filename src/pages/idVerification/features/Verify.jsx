@@ -1,11 +1,13 @@
 import { Form, Image, Input, Modal, Radio, Typography, Empty } from "antd";
 import MainButton from "../../../components/baseComponents/button/MainButton";
 import { useAppoinment } from "../../../hooks/idCreate";
+import useNotification from "../../../hooks/useNotification";
 
 const { Text } = Typography;
 
 export default function Verify({ open, onCancel, user }) {
   //console.log("User Details:", user);
+  const { notifySuccess, notifyError } = useNotification();
 
   const {
     mutate: confirmAppointment,
@@ -19,8 +21,9 @@ export default function Verify({ open, onCancel, user }) {
     confirmAppointment(
       { userId: user.userId, documentsValid },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
           //console.log(" Appointment Confirmed:", res);
+          notifySuccess(res?.message);
           Modal.success({
             title: "Success",
             content: "Appointment confirmation updated successfully.",
@@ -28,7 +31,8 @@ export default function Verify({ open, onCancel, user }) {
           onCancel();
         },
         onError: (err) => {
-          console.error(" Error confirming appointment:", err);
+          // console.error(" Error confirming appointment:", err);
+          notifyError(err?.response?.data?.message);
           Modal.error({
             title: "Error",
             content: err?.response?.data?.message || "Something went wrong!",

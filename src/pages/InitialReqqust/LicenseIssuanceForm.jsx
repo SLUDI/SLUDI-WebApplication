@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   Typography,
-  message,
   Divider,
   Space,
   DatePicker,
@@ -22,6 +21,7 @@ import {
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import useNotification from "../../hooks/useNotification";
 
 const { Title, Text } = Typography;
 
@@ -38,6 +38,8 @@ export default function LicenseIssuanceForm() {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const verificationData = useSelector((state) => state.licenseVerification);
+
+  const { notifySuccess, notifyError } = useNotification();
 
   //console.log("Verification Data:", verificationData);
 
@@ -77,11 +79,14 @@ export default function LicenseIssuanceForm() {
     };
 
     licenseRequest.mutate(payload, {
-      onSuccess: () => {
-        message.success("License issued successfully!");
+      onSuccess: (res) => {
+        notifySuccess(res?.message);
+
         navigate("/issuedLicenses");
       },
-      onError: () => message.error("Something went wrong!"),
+      onError: (err) => {
+        notifyError(err?.response?.data?.message);
+      },
     });
   };
 

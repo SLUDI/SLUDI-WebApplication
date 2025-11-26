@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { IoPersonOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { Calendar1Icon, CalendarIcon } from "lucide-react";
+import useNotification from "../../hooks/useNotification";
 
 const { Option } = Select;
 
@@ -38,6 +39,8 @@ const DigitalIdentityForm = () => {
 
   const selectDate = useSelector((state) => state.availableDate.date);
   const selectDistrict = useSelector((state) => state.availableDate.distric);
+
+  const { notifySuccess, notifyError } = useNotification();
 
   //console.log("Selected Date from Redux:", selectDate);
   //console.log("Selected District from Redux:", selectDistrict);
@@ -77,6 +80,7 @@ const DigitalIdentityForm = () => {
 
     mutate(payload, {
       onSuccess: (res) => {
+        notifySuccess(res?.message);
         message.success({
           content: res?.message || "Citizen Registered Successfully!",
           duration: 3,
@@ -90,14 +94,7 @@ const DigitalIdentityForm = () => {
         }, 2000);
       },
       onError: (err) => {
-        message.error({
-          content:
-            err.response?.data?.message || "Citizen Registration Failed!",
-          duration: 3,
-          style: {
-            marginTop: "10vh",
-          },
-        });
+        notifyError(err?.response?.data?.message);
       },
     });
   };
