@@ -13,7 +13,7 @@ import {
 
 //import { useSelector } from "react-redux";
 import NoPostImg from "../../assets/images/NoPostImg";
-import { useGetAllLicenses } from "../../hooks/licenseIssue";
+import { useGetAllCount, useGetAllLicenses } from "../../hooks/licenseIssue";
 import ViewTemplate from "./features/ViewTemplate";
 
 const { Search } = Input;
@@ -26,6 +26,8 @@ const IssuedLicense = () => {
 
   const [viewOpen, setViewOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  const { data: countData } = useGetAllCount();
 
   const { data: licenseData, isLoading: isLicenseLoading } =
     useGetAllLicenses();
@@ -69,7 +71,7 @@ const IssuedLicense = () => {
                   Active Requests
                 </p>
                 <p className="mt-2 text-3xl sm:text-4xl font-bold text-black">
-                  4
+                  {countData?.data?.activeDrivingLicense}
                 </p>
               </div>
               <div className="text-3xl sm:text-4xl opacity-80 text-blue-700">
@@ -85,7 +87,7 @@ const IssuedLicense = () => {
                   Licenses Issued
                 </p>
                 <p className="mt-2 text-3xl sm:text-4xl font-bold text-black">
-                  5
+                  {countData?.data?.totalDrivingLicense}
                 </p>
               </div>
               <div className="text-3xl sm:text-4xl opacity-80 text-green-500">
@@ -98,13 +100,13 @@ const IssuedLicense = () => {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs sm:text-sm font-medium opacity-90 text-black">
-                  Pending Verification
+                  Deactivated Licenses
                 </p>
                 <p className="mt-2 text-3xl sm:text-4xl font-bold text-black">
-                  2
+                  {countData?.data?.deactivateDrivingLicense}
                 </p>
               </div>
-              <div className="text-3xl sm:text-4xl opacity-80">⏳</div>
+              <div className="text-3xl sm:text-4xl opacity-80">🚫</div>
             </div>
           </div>
 
@@ -115,10 +117,10 @@ const IssuedLicense = () => {
                   Expiring Soon
                 </p>
                 <p className="mt-2 text-3xl sm:text-4xl font-bold text-black">
-                  2
+                  {countData?.data?.expireSoon}
                 </p>
               </div>
-              <div className="text-3xl sm:text-4xl opacity-80">🚫</div>
+              <div className="text-3xl sm:text-4xl opacity-80">⏳</div>
             </div>
           </div>
         </div>

@@ -81,10 +81,24 @@ export const getLicense = async () => {
   return res.data;
 };
 
+export const changeImageUrl = async (imageUrl) => {
+  const res = await axiosInstance.get(
+    `${endpoints.CHANGE_LICENSE_IMAGE_STATUS}/${imageUrl}`
+  );
+  return res.data;
+};
+
+export const statusCount = async () => {
+  const res = await axiosInstance.get(endpoints.LICENSE_COUNT);
+  return res.data;
+};
+
 export default {
   requestLicense,
   checkLicenseStatus,
   createLicense,
   getVehicleCategories,
   getLicense,
+  changeImageUrl,
+  statusCount,
 };
