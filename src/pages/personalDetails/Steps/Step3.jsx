@@ -96,7 +96,7 @@ export default function Step3() {
       formData.append("threshold", thresholdValue.toString());
 
       const response = await fetch(
-        "https://Tishan-001-deepfake-detection.hf.space/verify-with-embedding",
+        "https://Tishan-001-deepfake-detector.hf.space/verify-with-embedding",
         {
           method: "POST",
           body: formData,
