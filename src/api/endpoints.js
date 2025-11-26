@@ -22,6 +22,8 @@ const endpoints = {
   GET_ALL_LICENSES: "/api/vc/driving-license/request/all",
   SAVE_BIOMETRIC_DATA: "/api/citizen-user/save-biometric",
   CREDENTIAL: "/api/vc/identity/credential",
+  CHANGE_LICENSE_IMAGE_STATUS: "/api/vc/photo",
+  LICENSE_COUNT: "/api/vc/driving-license/stats",
 };
 
 export default endpoints;

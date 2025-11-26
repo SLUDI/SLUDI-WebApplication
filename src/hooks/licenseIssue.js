@@ -4,6 +4,7 @@ import {
   getLicense,
   getVehicleCategories,
   requestLicense,
+  statusCount,
 } from "../services/licenseIssued/licenseIssued";
 
 export const useLicenseRequest = () => {
@@ -29,5 +30,12 @@ export const useGetAllLicenses = () => {
   return useQuery({
     queryKey: ["all-licenses"],
     queryFn: getLicense,
+  });
+};
+
+export const useGetAllCount = () => {
+  return useQuery({
+    queryKey: ["license-count"],
+    queryFn: statusCount,
   });
 };
