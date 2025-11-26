@@ -39,9 +39,9 @@ export default function PersonalDetails() {
       <div className="w-full flex flex-col items-center justify-center">
         {completedSteps === 1 && currentStep === 0 && <Step1 />}
         {completedSteps === 2 && currentStep === 1 && <Step2 />}
-        {completedSteps === 3 && currentStep === 2 && <Step3 />}
-        {completedSteps === 4 && currentStep === 3 && <Step4 />}
-        {completedSteps === 5 && currentStep === 4 && <Step5 />}
+        {/* {completedSteps === 3 && currentStep === 2 && <Step3 />} */}
+        {completedSteps === 3 && currentStep === 2 && <Step4 />}
+        {completedSteps === 4 && currentStep === 3 && <Step5 />}
       </div>
     </div>
   );
