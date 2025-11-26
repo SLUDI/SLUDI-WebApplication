@@ -81,7 +81,7 @@ export default function Step2() {
       formData.append("file", blob, "face_capture.webm");
 
       const response = await fetch(
-        "https://Tishan-001-video-deepfake-detection.hf.space/extract",
+        "https://Tishan-001-deepfake-detector.hf.space/extract",
         {
           method: "POST",
           body: formData,
