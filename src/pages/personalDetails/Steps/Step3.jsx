@@ -112,8 +112,8 @@ export default function Step3() {
       console.log("Verification result:", result);
 
       // Handle the response based on your API structure
-      const isVerified = result.is_match || false;
-      const similarity = result.similarity || 0;
+      const isVerified = result.face_verification.is_match || false;
+      const similarity = result.face_verification.similarity || 0;
 
       setVerificationResult(isVerified);
       setSimilarityScore(similarity);
