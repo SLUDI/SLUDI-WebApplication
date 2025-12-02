@@ -50,7 +50,7 @@ export default function Step5() {
         gender,
       },
       biometrics: {
-        faceEmbedding: faceEmbedding ? JSON.parse(faceEmbedding) : null,
+        faceEmbedding: faceEmbedding ? faceEmbedding : null,
         fingerprints: fingerprints ? JSON.parse(fingerprints) : null,
       },
       collectionTimestamp: new Date().toISOString(),

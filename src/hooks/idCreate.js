@@ -5,6 +5,7 @@ import {
   dateAvailability,
   saveBiometricData,
   generateCredential,
+  faceVerification,
 } from "../services/idCreate/register";
 import {
   idverification,
@@ -56,6 +57,12 @@ export const useSaveBiometricData = () => {
 export const useGenerateCredential = () => {
   return useMutation({
     mutationFn: (did) => generateCredential(did),
+  });
+};
+
+export const useFaceVerification = () => {
+  return useMutation({
+    mutationFn: faceVerification,
   });
 };
 
