@@ -7,6 +7,7 @@ import IdVerification from "../pages/idVerification/IdVerification";
 import PendingIds from "../pages/pendingId/PendingIds";
 import ReportAnalytic from "../pages/reportAnalitic/ReportAnalytic";
 import PersonalDetails from "../pages/personalDetails/personalDetails";
+import FaceVerification from "../pages/FaceVerification/faceVerification";
 import AdminPanel from "../pages/AdminiPanel/AdminPanel";
 import DigitalIdentityForm from "../pages/signin/DigitalIdentityForm";
 import DigitalIdentityBookingPage from "../pages/signin/BookingDate";
@@ -37,6 +38,7 @@ export default function RouterSet() {
           <Route path="pending" element={<PendingIds />} />
           <Route path="analatic" element={<ReportAnalytic />} />
           <Route path="personalDetails" element={<PersonalDetails />} />
+          <Route path="faceVerification" element={<FaceVerification />} />
           <Route path="organization" element={<Organization />} />
           <Route path="permission" element={<Permission />} />
           <Route path="organizationUser" element={<OrganizationManagment />} />

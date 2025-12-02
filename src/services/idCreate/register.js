@@ -128,10 +128,19 @@ export const generateCredential = async (did) => {
 //   return res.data;
 // };
 
+export const faceVerification = async (data) => {
+  const response = await axiosInstance.post(
+    endpoints.FACE_VERIFICATION,
+    data
+  );
+  return response.data;
+};
+
 export default {
   registerUser,
   registerCitizen,
   dateAvailability,
   saveBiometricData,
   generateCredential,
+  faceVerification,
 };

@@ -124,10 +124,11 @@ export default function Step4() {
   const onFinish = () => {
     const payload = {
       userId: userId,
-      faceEmbedding: storedEmbeddingData,
+      faceEmbeddingBase64: storedEmbeddingData,
       fingerprintBase64: "aaaaaaa",
     };
 
+    console.log("Payload to be sent:", payload);
     mutate(payload, {
       onSuccess: (res) => {
         notifySuccess(res?.message);
