@@ -239,7 +239,7 @@ export default function Step2() {
             ref={videoRef}
             autoPlay
             muted
-            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300"
+            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300 transform scale-x-[-1]"
           />
         )}
 
