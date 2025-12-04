@@ -152,7 +152,7 @@ export default function Verify({ open, onCancel, user }) {
               <div className="w-full flex flex-row gap-10">
                 <Form.Item name="date" className="w-full">
                   <Input
-                    value={user?.dateOfBirth}
+                    value={user?.appointmentDate}
                     readOnly
                     className="text-black text-sm"
                   />
