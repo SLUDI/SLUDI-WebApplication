@@ -33,6 +33,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Copy fingerprint device SDK folder (includes license files and libraries)
+COPY --from=builder /app/sdk /usr/share/nginx/html/sdk
+
 # Expose port 80
 EXPOSE 80
 
