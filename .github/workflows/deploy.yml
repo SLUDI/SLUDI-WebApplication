@@ -56,11 +56,24 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || '22' }}
           script: |
+            # Check Docker is available
             docker --version || exit 1
+
+            # Go to webapp directory
             cd ${{ env.REMOTE_DIR }} || exit 1
 
-            echo "Found docker-compose.yml in $(pwd)"
+            echo "docker-compose.yml located at $(pwd)"
 
+            # Stop and remove existing containers
+            docker compose down
+
+            # Pull latest image
             docker compose pull || docker pull ${{ env.IMAGE_NAME }}:latest
+
+            # Recreate and start containers
             docker compose up -d --build
+
+            # Cleanup unused images
             docker image prune -f || true
+
+            echo "Web app deployment completed successfully!"
