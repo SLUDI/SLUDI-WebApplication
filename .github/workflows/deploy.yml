@@ -35,6 +35,9 @@ jobs:
           context: .
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_SECRET_KEY=${{ secrets.VITE_SECRET_KEY }}
 
   deploy:
     name: Deploy Web App to EC2
@@ -60,5 +63,4 @@ jobs:
 
             docker compose pull || docker pull ${{ env.IMAGE_NAME }}:latest
             docker compose up -d --build
-
             docker image prune -f || true
