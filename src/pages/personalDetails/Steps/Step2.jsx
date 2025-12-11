@@ -247,9 +247,8 @@ export default function Step2() {
 
         <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
           <div
-            className={`${
-              uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
-            }  h-2.5 rounded-full transition-all duration-500`}
+            className={`${uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
+              }  h-2.5 rounded-full transition-all duration-500`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -265,17 +264,16 @@ export default function Step2() {
           <button
             onClick={startRecording}
             disabled={recording || uploading}
-            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
-              recording || uploading
+            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${recording || uploading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#13A4B4] "
-            }`}
+              }`}
           >
             {uploading
               ? "Uploading..."
               : recording
-              ? "Recording..."
-              : "Start Capture"}
+                ? "Recording..."
+                : "Start Capture"}
           </button>
         )}
       </div>

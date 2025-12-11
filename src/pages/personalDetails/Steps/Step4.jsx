@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, message, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCompletedSteps, setCurrentStep } from "../../../redux/stepSlice";
@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import { useSaveBiometricData } from "../../../hooks/idCreate";
 import { getLocalStorageData } from "../../../utils/localStorageHelper";
 import useNotification from "../../../hooks/useNotification";
+import io from "socket.io-client";
 
 const FINGERS = [
   { id: "thumb_left", label: "Left Thumb", position: "left" },
@@ -32,7 +33,7 @@ export default function Step4() {
   const storedEmbeddingData = getLocalStorageData("face_embedding");
   const { notifySuccess, notifyError } = useNotification();
 
-  //   console.log("Ab", storedEmbeddingData);
+  console.log("Ab", storedEmbeddingData);
   //   console.log(userId);
 
   const [collectedFingers, setCollectedFingers] = useState({});
@@ -41,48 +42,94 @@ export default function Step4() {
   const [uploadingFinger, setUploadingFinger] = useState(null);
   const [allCollected, setAllCollected] = useState(false);
 
+  const socketRef = useRef(null);
+  const capturingFingerRef = useRef(null);
+
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3000");
+
+    socketRef.current.on("connect", () => {
+      console.log("Connected to local fingerprint service");
+    });
+
+    socketRef.current.on("disconnect", () => {
+      console.log("Disconnected from local fingerprint service");
+    });
+
+    socketRef.current.on("status", (status) => {
+      console.log("Device status:", status);
+      if (status.startsWith("Error")) {
+        message.error(status);
+        setIsCapturing(false);
+        setUploadingFinger(null);
+        capturingFingerRef.current = null;
+      }
+    });
+
+    socketRef.current.on("finger-detected", (data) => {
+      // data: { template, image }
+      const fingerIndex = capturingFingerRef.current;
+
+      if (fingerIndex !== null) {
+        const finger = FINGERS[fingerIndex];
+        const fingerprintData = {
+          fingerId: finger.id,
+          fingerLabel: finger.label,
+          timestamp: new Date().toISOString(),
+          data: data.template, // The actual template from SDK
+          // image: data.image, // Optional: if we want to display/save the image
+          quality: 100, // SDK might not return quality, assuming 100 or need to parse
+        };
+
+        // Store in localStorage
+        const storedFingerprints = JSON.parse(localStorage.getItem("fingerprints")) || {};
+        storedFingerprints[finger.id] = fingerprintData;
+        localStorage.setItem("fingerprints", JSON.stringify(storedFingerprints));
+
+        setCollectedFingers((prev) => ({
+          ...prev,
+          [fingerIndex]: fingerprintData,
+        }));
+
+        message.success(`${finger.label} fingerprint collected successfully!`);
+
+        // Reset capturing state
+        setIsCapturing(false);
+        setUploadingFinger(null);
+        capturingFingerRef.current = null;
+
+        // Move to next finger if not at end
+        if (fingerIndex < FINGERS.length - 1) {
+          setCurrentFinger(fingerIndex + 1);
+        }
+      }
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
+  }, []);
+
   // Simulate fingerprint capture
+  // Start fingerprint capture
   const captureFingerprint = async (fingerIndex) => {
     const finger = FINGERS[fingerIndex];
     setIsCapturing(true);
     setUploadingFinger(fingerIndex);
+    capturingFingerRef.current = fingerIndex;
 
-    try {
-      // Simulate processing delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Simulate fingerprint data collection
-      const fingerprintData = {
-        fingerId: finger.id,
-        fingerLabel: finger.label,
-        timestamp: new Date().toISOString(),
-        data: Math.random().toString(36).substring(7),
-        quality: Math.floor(Math.random() * (100 - 80 + 1)) + 80,
-      };
-
-      // Store in localStorage
-      const storedFingerprints =
-        JSON.parse(localStorage.getItem("fingerprints")) || {};
-      storedFingerprints[finger.id] = fingerprintData;
-      localStorage.setItem("fingerprints", JSON.stringify(storedFingerprints));
-
-      setCollectedFingers((prev) => ({
-        ...prev,
-        [fingerIndex]: fingerprintData,
-      }));
-
-      message.success(`${finger.label} fingerprint collected successfully!`);
-
-      // Move to next finger if not at end
-      if (fingerIndex < FINGERS.length - 1) {
-        setCurrentFinger(fingerIndex + 1);
-      }
-    } catch (error) {
-      console.error("Error capturing fingerprint:", error);
-      message.error("Failed to capture fingerprint. Please try again.");
-    } finally {
+    // Emit init-device to ensure device is ready and listening
+    // The server handles multiple init calls gracefully or we can check connection
+    if (socketRef.current) {
+      socketRef.current.emit("init-device");
+      message.info(`Please place your ${finger.label} on the scanner`);
+    } else {
+      message.error("Fingerprint service not connected");
       setIsCapturing(false);
       setUploadingFinger(null);
+      capturingFingerRef.current = null;
     }
   };
 
@@ -122,10 +169,20 @@ export default function Step4() {
   const { mutate, isPending } = useSaveBiometricData();
 
   const onFinish = () => {
+    // Collect all templates
+    const templates = Object.values(collectedFingers).map(f => f.data);
+
+    // For now, assuming backend wants a JSON string of the templates array or similar.
+    // Based on "fingerprintBase64": "aaaaaaa", it seems to expect a string.
+    // If backend expects a single composite template, we might need to merge them, 
+    // but usually registration involves sending multiple templates.
+    // I will send the array of base64 templates as a JSON string for now.
+    const fingerprintPayload = JSON.stringify(templates);
+
     const payload = {
       userId: userId,
-      faceEmbeddingBase64: storedEmbeddingData,
-      fingerprintBase64: "aaaaaaa",
+      faceEmbedding: storedEmbeddingData,
+      fingerprintBase64: fingerprintPayload,
     };
 
     console.log("Payload to be sent:", payload);
@@ -165,9 +222,8 @@ export default function Step4() {
             <div
               className="bg-gradient-to-r from-[#13A4B4] to-[#0d7a8a] h-3 rounded-full transition-all duration-500"
               style={{
-                width: `${
-                  (Object.keys(collectedFingers).length / FINGERS.length) * 100
-                }%`,
+                width: `${(Object.keys(collectedFingers).length / FINGERS.length) * 100
+                  }%`,
               }}
             ></div>
           </div>
@@ -192,13 +248,12 @@ export default function Step4() {
                       <button
                         onClick={() => captureFingerprint(actualIdx)}
                         disabled={isCapturing || uploadingFinger !== null}
-                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
-                          isCollected
-                            ? "bg-green-100 border-2 border-green-500"
-                            : isCurrentFinger
+                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${isCollected
+                          ? "bg-green-100 border-2 border-green-500"
+                          : isCurrentFinger
                             ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
                             : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
-                        } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
+                          } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
                       >
                         {uploadingFinger === actualIdx ? (
                           <Spin size="small" />
@@ -238,13 +293,12 @@ export default function Step4() {
                       <button
                         onClick={() => captureFingerprint(actualIdx)}
                         disabled={isCapturing || uploadingFinger !== null}
-                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${
-                          isCollected
-                            ? "bg-green-100 border-2 border-green-500"
-                            : isCurrentFinger
+                        className={`w-20 h-20 rounded-lg mb-3 flex items-center justify-center transition transform hover:scale-105 ${isCollected
+                          ? "bg-green-100 border-2 border-green-500"
+                          : isCurrentFinger
                             ? "bg-blue-100 border-2 border-blue-500 animate-pulse"
                             : "bg-gray-100 border-2 border-gray-300 hover:border-[#13A4B4]"
-                        } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
+                          } ${isCapturing ? "cursor-wait" : "cursor-pointer"}`}
                       >
                         {uploadingFinger === actualIdx ? (
                           <Spin size="small" />

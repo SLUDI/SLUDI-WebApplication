@@ -317,13 +317,12 @@ export default function Step3() {
         {/* Progress Bar */}
         <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
           <div
-            className={`${
-              verificationSuccess
+            className={`${verificationSuccess
                 ? "bg-green-500"
                 : verificationResult === false
-                ? "bg-red-500"
-                : "bg-blue-500"
-            } h-2.5 rounded-full transition-all duration-500`}
+                  ? "bg-red-500"
+                  : "bg-blue-500"
+              } h-2.5 rounded-full transition-all duration-500`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -340,19 +339,18 @@ export default function Step3() {
           <button
             onClick={startVerification}
             disabled={recording || verifying || !embeddingLoaded}
-            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
-              recording || verifying || !embeddingLoaded
+            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${recording || verifying || !embeddingLoaded
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#13A4B4] hover:bg-[#0f8a98]"
-            }`}
+              }`}
           >
             {verifying
               ? "Verifying..."
               : recording
-              ? "Recording..."
-              : !embeddingLoaded
-              ? "Load Embedding First"
-              : "Start Verification"}
+                ? "Recording..."
+                : !embeddingLoaded
+                  ? "Load Embedding First"
+                  : "Start Verification"}
           </button>
         )}
 
@@ -386,15 +384,15 @@ export default function Step3() {
                     similarityScore > 0.9
                       ? "text-green-600 ml-2"
                       : similarityScore > 0.7
-                      ? "text-yellow-600 ml-2"
-                      : "text-red-600 ml-2"
+                        ? "text-yellow-600 ml-2"
+                        : "text-red-600 ml-2"
                   }
                 >
                   {similarityScore > 0.9
                     ? "HIGH"
                     : similarityScore > 0.7
-                    ? "MEDIUM"
-                    : "LOW"}
+                      ? "MEDIUM"
+                      : "LOW"}
                 </span>
               </div>
             </div>
