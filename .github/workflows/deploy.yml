@@ -1,0 +1,79 @@
+name: Build → Push → Deploy Web App to EC2
+
+on:
+  push:
+    branches: [ "prod" ]
+
+env:
+  IMAGE_NAME: tishan001/sludi-webapp
+  REMOTE_DIR: /home/ubuntu/sludi/webapp
+
+jobs:
+  build-and-push:
+    name: Build webapp image and push to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_SECRET_KEY=${{ secrets.VITE_SECRET_KEY }}
+
+  deploy:
+    name: Deploy Web App to EC2
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Deploying to EC2
+        run: echo "Deploying webapp to EC2..."
+
+      - name: SSH and deploy webapp
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          script: |
+            # Check Docker is available
+            docker --version || exit 1
+
+            # Go to webapp directory
+            cd ${{ env.REMOTE_DIR }} || exit 1
+
+            echo "docker-compose.yml located at $(pwd)"
+
+            # Stop and remove existing containers
+            docker compose down
+
+            # Pull latest image
+            docker compose pull || docker pull ${{ env.IMAGE_NAME }}:latest
+
+            # Recreate and start containers
+            docker compose up -d --build
+
+            # Cleanup unused images
+            docker image prune -f || true
+
+            echo "Web app deployment completed successfully!"
