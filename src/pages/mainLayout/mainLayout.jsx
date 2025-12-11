@@ -52,9 +52,8 @@ export default function MainLayout() {
       key: "1",
       icon: (
         <MdOutlineDashboard
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -70,9 +69,8 @@ export default function MainLayout() {
       label: "User Management",
       icon: (
         <LuBookUser
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "2"
               ? "var(--color-selected)"
@@ -86,9 +84,8 @@ export default function MainLayout() {
       key: "3",
       icon: (
         <BiIdCard
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "3" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "3" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "3"
               ? "var(--color-selected)"
@@ -104,9 +101,8 @@ export default function MainLayout() {
       label: "Pending IDs",
       icon: (
         <MdOutlinePendingActions
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "4" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "4" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "4"
               ? "var(--color-selected)"
@@ -154,9 +150,8 @@ export default function MainLayout() {
       key: "5",
       icon: (
         <LuBookUser
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -172,9 +167,8 @@ export default function MainLayout() {
       label: "Permission Template",
       icon: (
         <TbReportAnalytics
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "2"
               ? "var(--color-selected)"
@@ -191,9 +185,8 @@ export default function MainLayout() {
       key: "1",
       icon: (
         <LuBookUser
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -208,9 +201,8 @@ export default function MainLayout() {
       key: "5",
       icon: (
         <MdOutlineLibraryBooks
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -225,9 +217,8 @@ export default function MainLayout() {
       key: "2",
       icon: (
         <BsQrCodeScan
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -243,9 +234,8 @@ export default function MainLayout() {
       key: "4",
       icon: (
         <RiPassPendingLine
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -263,9 +253,8 @@ export default function MainLayout() {
       key: "4",
       icon: (
         <MdOutlineLibraryBooks
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -280,9 +269,8 @@ export default function MainLayout() {
       key: "1",
       icon: (
         <BsQrCodeScan
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -298,9 +286,8 @@ export default function MainLayout() {
       key: "3",
       icon: (
         <RiPassPendingLine
-          className={`w-[32px] h-[32px] rounded-full p-1 ${
-            selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-          }`}
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
           color={
             selecteKey === "1"
               ? "var(--color-selected)"
@@ -317,8 +304,8 @@ export default function MainLayout() {
     organizationId === 1 && roleCode === "ADMIN"
       ? items
       : organizationId !== 1 && roleCode === "ADMIN"
-      ? adminitems
-      : useritems;
+        ? adminitems
+        : useritems;
 
   // Sidebar handling
   useEffect(() => {
@@ -358,19 +345,16 @@ export default function MainLayout() {
   return (
     <div className="w-full max-w-screen min-h-screen h-full flex items-center justify-start overflow-hidden">
       <div
-        className={`${
-          collapsed ? "w-[82px]" : "w-[270px]"
-        } min-h-dvh bg-colorSelected border-r-[2px] shadow-md relative transition-all duration-300 ease-in-out z-10`}
+        className={`${collapsed ? "w-[82px]" : "w-[270px]"
+          } min-h-dvh bg-colorSelected border-r-[2px] shadow-md relative transition-all duration-300 ease-in-out z-10`}
       >
         <div
-          className={`flex flex-col items-center justify-center gap-1 ${
-            collapsed ? "my-4" : "mt-6 mb-0"
-          }`}
+          className={`flex flex-col items-center justify-center gap-1 ${collapsed ? "my-4" : "mt-6 mb-0"
+            }`}
         >
           <LogoSmallImage
-            className={`${
-              collapsed ? "w-[60px]" : "w-[150px]"
-            } transition-all duration-300 ease-in-out`}
+            className={`${collapsed ? "w-[60px]" : "w-[150px]"
+              } transition-all duration-300 ease-in-out`}
           />
         </div>
 
@@ -383,7 +367,7 @@ export default function MainLayout() {
           />
         </div>
 
-        {/* 👇 show items based on role */}
+        {/*  show items based on role */}
         <Menu
           className="font-medium [&_.ant-menu-item-selected]:!bg-[#F1F5F9]"
           selectedKeys={[selecteKey]}

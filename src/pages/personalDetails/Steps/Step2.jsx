@@ -26,7 +26,7 @@ export default function Step2() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   //const [videoBlob, setVideoBlob] = useState(null);
-  const [extractedEmbedding, setExtractedEmbedding] = useState([]);
+  const [extractedEmbedding, setExtractedEmbedding] = useState();
 
   const instructions = [
     "Look straight",
@@ -44,7 +44,7 @@ export default function Step2() {
       //localStorage.setItem("face_embedding", JSON.stringify(embedding));
       //localStorage.setItem("embedding_timestamp", new Date().toISOString());
 
-      setLocalStorageData("face_embedding", JSON.stringify(embedding));
+      setLocalStorageData("face_embedding", embedding);
       setLocalStorageData("embedding_timestamp", new Date().toISOString());
       // console.log(
       //   "Embedding stored in localStorage:",
@@ -99,9 +99,10 @@ export default function Step2() {
       // console.log("Upload successful:", result);
 
       // Extract and store the embedding
-      if (result.embedding && Array.isArray(result.embedding)) {
-        setExtractedEmbedding(result.embedding);
-        storeEmbeddingInLocalStorage(result.embedding);
+      if (result.embedding_b64) {
+        // legacy: embedding array
+        setExtractedEmbedding(result.embedding_b64);
+        storeEmbeddingInLocalStorage(result.embedding_b64);
       } else {
         console.warn("No embedding found in response:", result);
         message.warning("No face features extracted. Please try again.");
@@ -141,7 +142,7 @@ export default function Step2() {
   // Start recording and show instructions
   const startRecording = async () => {
     setUploadSuccess(false);
-    setExtractedEmbedding([]);
+    setExtractedEmbedding();
     const stream = await startCamera();
     if (!stream) return;
 
@@ -184,7 +185,7 @@ export default function Step2() {
   const resetCapture = () => {
     setUploadSuccess(false);
     //setVideoBlob(null);
-    setExtractedEmbedding([]);
+    setExtractedEmbedding();
     setInstruction("Get ready...");
     setProgress(0);
 
@@ -202,7 +203,7 @@ export default function Step2() {
     const storedEmbedding = getLocalStorageData("face_embedding");
     if (storedEmbedding) {
       try {
-        const embedding = JSON.parse(storedEmbedding);
+        const embedding = storedEmbedding;
         setExtractedEmbedding(embedding);
         setUploadSuccess(true);
         setInstruction(
@@ -238,7 +239,7 @@ export default function Step2() {
             ref={videoRef}
             autoPlay
             muted
-            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300"
+            className="w-110 h-80 rounded-xl shadow-lg border border-gray-300 transform scale-x-[-1]"
           />
         )}
 
@@ -246,9 +247,8 @@ export default function Step2() {
 
         <div className="w-80 bg-gray-200 rounded-full h-2.5 mt-3">
           <div
-            className={`${
-              uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
-            }  h-2.5 rounded-full transition-all duration-500`}
+            className={`${uploadSuccess ? "bg-[#48d45b]" : "bg-red-500"
+              }  h-2.5 rounded-full transition-all duration-500`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -264,17 +264,16 @@ export default function Step2() {
           <button
             onClick={startRecording}
             disabled={recording || uploading}
-            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${
-              recording || uploading
+            className={`mt-6 px-6 py-2 rounded-lg text-white font-semibold transition ${recording || uploading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#13A4B4] "
-            }`}
+              }`}
           >
             {uploading
               ? "Uploading..."
               : recording
-              ? "Recording..."
-              : "Start Capture"}
+                ? "Recording..."
+                : "Start Capture"}
           </button>
         )}
       </div>
