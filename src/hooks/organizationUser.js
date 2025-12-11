@@ -13,6 +13,7 @@ import {
 export const useOrganizationUserCreate = () => {
   return useMutation({
     mutationFn: createOrganizationUser,
+    onSuccess: () => qc.invalidateQueries(["organizationUser"]),
   });
 };
 

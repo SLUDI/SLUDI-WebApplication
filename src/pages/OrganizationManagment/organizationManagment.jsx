@@ -269,7 +269,7 @@ const OrganizationManagement = () => {
                 onClick={() => setOpen(true)}
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-md transition h-10"
               >
-                Create Organization
+                Create User
               </button>
             </div>
           </div>
