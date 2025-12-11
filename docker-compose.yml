@@ -1,12 +1,10 @@
 services:
   sludi-webapp:
-    image: tishan001/sludi:latest
+    image: tishan001/sludi-webapp:latest
     container_name: sludi-backend
     ports:
       - "80:80"
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/" ]
       interval: 30s
