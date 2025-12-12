@@ -1,5 +1,5 @@
 import { Modal, Form, Input, Select, Button } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   useOrganizationRoles,
@@ -11,12 +11,13 @@ import useNotification from "../../../hooks/useNotification";
 export default function Create({ open, onCancel }) {
   const [form] = Form.useForm();
   const { mutate, isPending } = useOrganizationUserCreate();
-  const organizationId = useSelector((state) => state.auth.organizationId);
+  const defaultOrganizationId = useSelector((state) => state.auth.organizationId);
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState(null);
   const { notifySuccess, notifyError } = useNotification();
 
-  // Fetch roles for the organization
+  // Fetch roles for the selected organization
   const { data: rolesData, isLoading: isLoadingRoles } =
-    useOrganizationRoles(organizationId);
+    useOrganizationRoles(selectedOrganizationId);
 
   // Fetch all organizations
   const { data: organizationData, isLoading: isLoadingOrganizations } =
@@ -35,6 +36,7 @@ export default function Create({ open, onCancel }) {
       onSuccess: (res) => {
         notifySuccess(res?.message);
         form.resetFields();
+        setSelectedOrganizationId(null);
         onCancel();
       },
       onError: (err) => {
@@ -46,6 +48,7 @@ export default function Create({ open, onCancel }) {
 
   const handleCancel = () => {
     form.resetFields();
+    setSelectedOrganizationId(null);
     onCancel();
   };
 
@@ -123,6 +126,11 @@ export default function Create({ open, onCancel }) {
                 filterOption={(input, option) =>
                   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                 }
+                onChange={(value) => {
+                  setSelectedOrganizationId(value);
+                  // Clear role selection when organization changes
+                  form.setFieldValue("roleId", undefined);
+                }}
               />
             </Form.Item>
 
