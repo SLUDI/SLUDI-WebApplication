@@ -29,10 +29,24 @@ export const allOrganizationUsers = async (organizationId, status) => {
   return res.data;
 };
 
+export const allOrganizationsUsers = async () => {
+  const url = endpoints.GET_ALL_ORGANIZATIONS_USERS;
+
+  const res = await axiosInstance.get(url);
+  return res.data;
+};
+
 // Get Organization count
 export const getOrganizationCount = async (organizationId) => {
   const response = await axiosInstance.get(
     `${endpoints.ORGNIZATION_COUNT}/${organizationId}/statistics`
+  );
+  return response.data;
+};
+
+export const getOrganizationsCount = async () => {
+  const response = await axiosInstance.get(
+    `${endpoints.ORGNIZATION_COUNT}`
   );
   return response.data;
 };
@@ -65,4 +79,6 @@ export default {
   approveOrganizationUser,
   suspendOrganizationUser,
   reactivateOrganizationUser,
+  getOrganizationsCount,
+  allOrganizationsUsers,
 };

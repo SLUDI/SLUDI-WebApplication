@@ -12,9 +12,9 @@ import {
 } from "lucide-react";
 import Create from "./features/Create";
 import {
-  useAllOrganizationUsers,
+  useAllOrganizationsUsers,
   useApproveUser,
-  useOrganizationCount,
+  useOrganizationsCount,
   useReactivateUser,
   useSuspendUser,
 } from "../../hooks/organizationUser";
@@ -39,12 +39,9 @@ const OrganizationUser = () => {
 
   const [filterStatus, setFilterStatus] = useState("NOT_FILTER");
 
-  const { data: userData, isLoading } = useAllOrganizationUsers(
-    organizationId,
-    filterStatus
-  );
+  const { data: userData, isLoading } = useAllOrganizationsUsers();
 
-  const { data: userCount } = useOrganizationCount(organizationId);
+  const { data: userCount } = useOrganizationsCount();
 
   const approveUser = useApproveUser();
   const suspendUser = useSuspendUser();
