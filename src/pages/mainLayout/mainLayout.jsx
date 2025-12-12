@@ -48,27 +48,27 @@ export default function MainLayout() {
 
   // --- item lists ---
   const items = [
-    {
-      key: "1",
-      icon: (
-        <MdOutlineDashboard
-          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
-            }`}
-          color={
-            selecteKey === "1"
-              ? "var(--color-selected)"
-              : "var(--color-non-selected)"
-          }
-        />
-      ),
-      label: "Dashboard",
-      route: "/dashboard",
-    },
+    // {
+    //   key: "1",
+    //   icon: (
+    //     <MdOutlineDashboard
+    //       className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+    //         }`}
+    //       color={
+    //         selecteKey === "1"
+    //           ? "var(--color-selected)"
+    //           : "var(--color-non-selected)"
+    //       }
+    //     />
+    //   ),
+    //   label: "Dashboard",
+    //   route: "/dashboard",
+    // },
     {
       key: "2",
-      label: "User Management",
+      label: "Dashboard",
       icon: (
-        <LuBookUser
+        <MdOutlineDashboard
           className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "2" ? "bg-colorTextSelected" : "bg-transparent"
             }`}
           color={
