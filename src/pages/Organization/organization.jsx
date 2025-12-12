@@ -13,12 +13,15 @@ import {
 } from "../../hooks/organization";
 import NoPostImg from "../../assets/images/NoPostImg";
 import TextArea from "antd/es/input/TextArea";
+import OrganizationUser from "../OrganizationUsers/organizationUser";
+
 const { Search } = Input;
 const Text = Typography;
 
 const Organization = () => {
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [activeTab, setActiveTab] = useState("organizations");
 
   const {
     data: organizationData,
@@ -178,154 +181,186 @@ const Organization = () => {
           <h1 className="text-3xl font-bold text-gray-900">
             Organization Management
           </h1>
+          {activeTab === "organizations" && (
+            <button
+              onClick={() => {
+                setOpen(true);
+              }}
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-md transition duration-200"
+            >
+              Create Organization
+            </button>
+          )}
+        </div>
+
+        {/* Tabs */}
+        <div className="flex border-b border-gray-200 mb-6">
           <button
-            onClick={() => {
-              setOpen(true);
-            }}
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-md transition duration-200"
+            onClick={() => setActiveTab("organizations")}
+            className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${activeTab === "organizations"
+              ? "text-[#13A4B4] border-b-2 border-[#13A4B4]"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
           >
-            Create Organization
+            Organizations
+          </button>
+          <button
+            onClick={() => setActiveTab("organizationUsers")}
+            className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${activeTab === "organizationUsers"
+              ? "text-[#13A4B4] border-b-2 border-[#13A4B4]"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
+          >
+            Organization Users
           </button>
         </div>
-        <div className="flex flex-row items-center ">
-          <div className="w-[25%]">
-            <Search
-              placeholder="Search by code or Name"
-              style={{ maxWidth: "100%" }}
-              size="large"
-              className="mb-2 h-10"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              enterButton={
-                <button className="bg-[#13A4B4] hover:bg-[#7c9ece] text-white px-4 rounded-[0px_10px_10px_0px] h-10">
-                  Search
-                </button>
-              }
-            />
-          </div>
-          <div>
-            <div className="mt-[-8px] ml-4 text-[#000000] font-bold">
-              Total Records :{posts?.length}
-            </div>
-          </div>
-        </div>
-        <div className="p-6  max-h-screen">
-          <div className="w-full  sm:w-full  rounded-xl py-8 px-2 ssm:px-3 sm:px-4 lg:px-8  bg-colorSelected gap-4 flex flex-col flex-1 items-center justify-between">
-            {!isLoading && (
-              <div className="w-full overflow-auto scroll">
-                {/* Header */}
-                {filteredPosts?.length > 0 && (
-                  <div className="w-full min-w-[900px] grid grid-cols-28 rounded-t-xl bg-[#F1F5F9]">
-                    <div className="col-span-4 flex items-center justify-start p-3 h-[40px] rounded-tl-lg">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        OrgCode
-                      </Text>
-                    </div>
-                    <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        Name
-                      </Text>
-                    </div>
-                    <div className="col-span-4 h-[40px] flex items-center justify-start p-3">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        OrgType
-                      </Text>
-                    </div>
-                    <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        TemplateName
-                      </Text>
-                    </div>
-                    <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        TemplateId
-                      </Text>
-                    </div>
-                    <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        Status
-                      </Text>
-                    </div>
-                    <div className="col-span-8 h-[40px] flex items-center justify-center p-3 rounded-tr-lg">
-                      <Text className="t-16 font-bold pr-[1px] truncate">
-                        Actions
-                      </Text>
-                    </div>
-                  </div>
-                )}
 
-                {/* Data Rows */}
-                {filteredPosts?.length > 0 ? (
-                  <div className="w-full min-w-[900px] space-y-2 mt-4">
-                    {filteredPosts.map((user) => (
-                      <div
-                        key={user.userId}
-                        className="w-full grid grid-cols-28 pt-1 border-3 bg-white border-b-[#F1F5F9] p-2 rounded-xl"
-                      >
-                        <div className="col-span-4 flex items-center justify-start p-3 h-[40px]">
-                          <Tooltip title={user.orgCode}>
-                            <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                              {user.orgCode}
-                            </Text>
-                          </Tooltip>
+        {/* Tab Content */}
+        {activeTab === "organizationUsers" ? (
+          <OrganizationUser />
+        ) : (
+          <>
+            <div className="flex flex-row items-center ">
+              <div className="w-[25%]">
+                <Search
+                  placeholder="Search by code or Name"
+                  style={{ maxWidth: "100%" }}
+                  size="large"
+                  className="mb-2 h-10"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  enterButton={
+                    <button className="bg-[#13A4B4] hover:bg-[#7c9ece] text-white px-4 rounded-[0px_10px_10px_0px] h-10">
+                      Search
+                    </button>
+                  }
+                />
+              </div>
+              <div>
+                <div className="mt-[-8px] ml-4 text-[#000000] font-bold">
+                  Total Records :{posts?.length}
+                </div>
+              </div>
+            </div>
+            <div className="p-6  max-h-screen">
+              <div className="w-full  sm:w-full  rounded-xl py-8 px-2 ssm:px-3 sm:px-4 lg:px-8  bg-colorSelected gap-4 flex flex-col flex-1 items-center justify-between">
+                {!isLoading && (
+                  <div className="w-full overflow-auto scroll">
+                    {/* Header */}
+                    {filteredPosts?.length > 0 && (
+                      <div className="w-full min-w-[900px] grid grid-cols-28 rounded-t-xl bg-[#F1F5F9]">
+                        <div className="col-span-4 flex items-center justify-start p-3 h-[40px] rounded-tl-lg">
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            OrgCode
+                          </Text>
                         </div>
                         <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                          <Tooltip title={user.name}>
-                            <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                              {user.name}
-                            </Text>
-                          </Tooltip>
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            Name
+                          </Text>
                         </div>
                         <div className="col-span-4 h-[40px] flex items-center justify-start p-3">
-                          <Tooltip title={user.orgType}>
-                            <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                              {user.orgType}
-                            </Text>
-                          </Tooltip>
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            OrgType
+                          </Text>
                         </div>
                         <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                          <Tooltip title={user.templateName}>
-                            <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                              {user.templateName}
-                            </Text>
-                          </Tooltip>
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            TemplateName
+                          </Text>
                         </div>
                         <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
-                          <Tooltip title={user?.templateId}>
-                            <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
-                              {user?.templateId}
-                            </Text>
-                          </Tooltip>
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            TemplateId
+                          </Text>
                         </div>
-                        <div className="col-span-3 h-[40px]  flex items-center justify-start p-3">
-                          {getStatusTag(user.status)}
+                        <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            Status
+                          </Text>
                         </div>
-                        <div className="col-span-8 h-[45px] flex items-center justify-center p-3 rounded-tr-lg gap-3">
-                          {getActionButton(user)}
-                          <Button
-                            className="text-gray-700 hover:text-cyan-600 transition duration-200"
-                            title="View Details"
-                            onClick={() =>
-                              setDetailsModal({ open: true, user })
-                            }
-                          >
-                            <MoreVertical size={20} />
-                          </Button>
+                        <div className="col-span-8 h-[40px] flex items-center justify-center p-3 rounded-tr-lg">
+                          <Text className="t-16 font-bold pr-[1px] truncate">
+                            Actions
+                          </Text>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="w-full flex flex-col flex-1 items-center justify-center">
-                    <div className="flex flex-col gap-1 items-center justify-center">
-                      <Text className="font-semibold t-16">No User Data</Text>
-                    </div>
+                    )}
+
+                    {/* Data Rows */}
+                    {filteredPosts?.length > 0 ? (
+                      <div className="w-full min-w-[900px] space-y-2 mt-4">
+                        {filteredPosts.map((user) => (
+                          <div
+                            key={user.userId}
+                            className="w-full grid grid-cols-28 pt-1 border-3 bg-white border-b-[#F1F5F9] p-2 rounded-xl"
+                          >
+                            <div className="col-span-4 flex items-center justify-start p-3 h-[40px]">
+                              <Tooltip title={user.orgCode}>
+                                <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
+                                  {user.orgCode}
+                                </Text>
+                              </Tooltip>
+                            </div>
+                            <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
+                              <Tooltip title={user.name}>
+                                <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
+                                  {user.name}
+                                </Text>
+                              </Tooltip>
+                            </div>
+                            <div className="col-span-4 h-[40px] flex items-center justify-start p-3">
+                              <Tooltip title={user.orgType}>
+                                <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
+                                  {user.orgType}
+                                </Text>
+                              </Tooltip>
+                            </div>
+                            <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
+                              <Tooltip title={user.templateName}>
+                                <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
+                                  {user.templateName}
+                                </Text>
+                              </Tooltip>
+                            </div>
+                            <div className="col-span-3 h-[40px] flex items-center justify-start p-3">
+                              <Tooltip title={user?.templateId}>
+                                <Text className="t-13 font-bold pr-[1px] truncate text-colorDarkDarkGray">
+                                  {user?.templateId}
+                                </Text>
+                              </Tooltip>
+                            </div>
+                            <div className="col-span-3 h-[40px]  flex items-center justify-start p-3">
+                              {getStatusTag(user.status)}
+                            </div>
+                            <div className="col-span-8 h-[45px] flex items-center justify-center p-3 rounded-tr-lg gap-3">
+                              {getActionButton(user)}
+                              <Button
+                                className="text-gray-700 hover:text-cyan-600 transition duration-200"
+                                title="View Details"
+                                onClick={() =>
+                                  setDetailsModal({ open: true, user })
+                                }
+                              >
+                                <MoreVertical size={20} />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="w-full flex flex-col flex-1 items-center justify-center">
+                        <div className="flex flex-col gap-1 items-center justify-center">
+                          <Text className="font-semibold t-16">No User Data</Text>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
       {open && (
         <Create
