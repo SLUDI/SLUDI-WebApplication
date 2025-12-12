@@ -206,7 +206,7 @@ const Signin = () => {
           res?.data?.roleCode === "ADMIN" &&
           res?.data?.organizationId === 1
         ) {
-          navigate("/dashboard");
+          navigate("/usermangemnt");
         } else if (
           res?.data?.roleCode === "ADMIN" &&
           res?.data?.organizationId !== 1
