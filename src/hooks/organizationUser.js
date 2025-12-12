@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   allOrganizationUsers,
+  allOrganizationsUsers,
   approveOrganizationUser,
   createOrganizationUser,
   getOrganizationCount,
+  getOrganizationsCount,
   getOrganizationRoles,
   reactivateOrganizationUser,
   suspendOrganizationUser,
@@ -40,6 +42,15 @@ export const useAllOrganizationUsers = (organizationId, status) => {
   });
 };
 
+export const useAllOrganizationsUsers = () => {
+  return useQuery({
+    queryKey: ["organizationsUsers"],
+    queryFn: () =>
+      allOrganizationsUsers(),
+    enabled: true,
+  });
+};
+
 //Get All Counts
 
 export const useOrganizationCount = (organizationId) => {
@@ -47,6 +58,14 @@ export const useOrganizationCount = (organizationId) => {
     queryKey: ["organizationCount", organizationId],
     queryFn: () => getOrganizationCount(organizationId),
     enabled: !!organizationId, // Only run query if organizationId exists
+  });
+};
+
+export const useOrganizationsCount = () => {
+  return useQuery({
+    queryKey: ["organizationsCount"],
+    queryFn: () => getOrganizationsCount(),
+    enabled: true,
   });
 };
 
