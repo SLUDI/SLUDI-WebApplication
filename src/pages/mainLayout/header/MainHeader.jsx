@@ -9,7 +9,7 @@ export default function MainHeader() {
     <div className="flex flex-row items-center justify-end  p-2 border-b ">
       <div className="flex items-center justify-end gap-4">
         <div className="flex items-center justify-end gap-2 ssm:max-w-[180px] sm:max-w-[300px] h-full">
-          <div className="w-[50px] h-[50px] min-w-[50px] rounded-full overflow-hidden bg-blue-300 ">
+          <div className="w-[50px] h-[50px] min-w-[50px] rounded-full overflow-hidden">
             <HeaderImage
               url={null}
               // url={user?.imageURL}
