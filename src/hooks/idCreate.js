@@ -16,6 +16,7 @@ import {
 export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
+    onSuccess: () => qc.invalidateQueries(["idVerification"]),
   });
 };
 

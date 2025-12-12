@@ -123,7 +123,7 @@ export default function Step5() {
 
   const handleGoToDashboard = () => {
     // Clear step state and navigate to dashboard
-    navigate("/dashboard");
+    navigate("/usermangemnt");
   };
 
   if (!registrationData) {
