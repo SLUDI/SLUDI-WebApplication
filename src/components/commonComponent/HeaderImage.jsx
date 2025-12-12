@@ -1,7 +1,7 @@
 import { Skeleton } from "antd";
 import { useState } from "react";
 import PropTypes from "prop-types";
-import T from "../baseComponents/text/T";
+import UserAvatar from "../../assets/images/userAvator";
 
 export default function HeaderImage({
   url,
@@ -10,12 +10,13 @@ export default function HeaderImage({
   isUploading = false,
 }) {
   const [loading, setLoading] = useState(!!url);
-  const initials = name && name.length >= 2 ? `${name[0]}${name[1]}` : "??";
+
   const handleImageError = () => {
     setLoading(false);
   };
+
   return (
-    <div className="w-full h-full rounded-full flex items-center justify-center relative">
+    <div className="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden">
       {/* Show Skeleton while loading */}
       {(loading || isUploading) && (
         <Skeleton.Avatar active size="large" className="absolute" />
@@ -23,33 +24,27 @@ export default function HeaderImage({
 
       {url && !isUploading ? (
         <img
-          // src={url}
-          // src={appendCacheBuster(url)}
+          src={url}
           alt="profile image"
-          className={`w-full h-full rounded-full ${
-            loading ? "hidden" : "block"
-          }`}
+          className={`w-full h-full rounded-full object-cover ${loading ? "hidden" : "block"
+            }`}
           onLoad={() => setLoading(false)}
           onError={handleImageError}
         />
       ) : (
         !loading && (
-          <div className="w-full h-full flex items-center justify-center rounded-full bg-colorPrimary">
-            <T
-              variant={`h${textSize}`}
-              className={`text-colorSelected font-semibold uppercase`}
-            >
-              {initials}
-            </T>
+          <div className="w-full h-full flex items-center justify-center rounded-full overflow-hidden">
+            <UserAvatar className="w-full h-full" />
           </div>
         )
       )}
     </div>
   );
 }
+
 HeaderImage.propTypes = {
   url: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  textSize: PropTypes.number.isRequired,
+  name: PropTypes.string,
+  textSize: PropTypes.number,
   isUploading: PropTypes.bool,
 };
