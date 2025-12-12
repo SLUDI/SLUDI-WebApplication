@@ -28,6 +28,7 @@ export default function Create({ open, onCancel }) {
     "vehicle:update",
     "vehicle:transfer",
     "vehicle:history:read",
+    "license:request_citizen_data",
     "license:read",
     "license:issue",
     "license:renew",
@@ -49,6 +50,9 @@ export default function Create({ open, onCancel }) {
     "organization:user:view",
     "organization:user:update",
     "organization:user:delete",
+    "organization:user:approve",
+    "organization:user:suspend",
+    "organization:user:reactive",
   ].map((p) => ({ value: p, label: p }));
 
   // Helper: avoid selecting same role twice

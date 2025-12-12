@@ -164,25 +164,16 @@ export default function Step4() {
     message.info("Fingerprint collection reset. Ready to start again.");
   };
 
-  ////////////////////////
-
   const { mutate, isPending } = useSaveBiometricData();
 
   const onFinish = () => {
     // Collect all templates
     const templates = Object.values(collectedFingers).map(f => f.data);
 
-    // For now, assuming backend wants a JSON string of the templates array or similar.
-    // Based on "fingerprintBase64": "aaaaaaa", it seems to expect a string.
-    // If backend expects a single composite template, we might need to merge them, 
-    // but usually registration involves sending multiple templates.
-    // I will send the array of base64 templates as a JSON string for now.
-    const fingerprintPayload = JSON.stringify(templates);
-
     const payload = {
       userId: userId,
-      faceEmbedding: storedEmbeddingData,
-      fingerprintBase64: fingerprintPayload,
+      faceEmbeddingBase64: storedEmbeddingData,
+      fingerprintBase64: templates,
     };
 
     console.log("Payload to be sent:", payload);
