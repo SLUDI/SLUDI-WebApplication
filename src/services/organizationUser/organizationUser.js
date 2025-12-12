@@ -45,9 +45,7 @@ export const getOrganizationCount = async (organizationId) => {
 };
 
 export const getOrganizationsCount = async () => {
-  const response = await axiosInstance.get(
-    `${endpoints.ORGNIZATION_COUNT}`
-  );
+  const response = await axiosInstance.get(endpoints.ORGNIZATION_COUNTS);
   return response.data;
 };
 
