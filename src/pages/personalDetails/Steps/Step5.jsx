@@ -24,9 +24,7 @@ export default function Step5() {
     location.state || {};
 
   const { mutate, isPending } = useRegister();
-  //const { mutate: generateCredential } = useGenerateCredential();
-
-  const generateCredential = useGenerateCredential();
+  const { mutate: generateCredentialMutate, isPending: isGeneratingCredential } = useGenerateCredential();
 
   const [registrationData, setRegistrationData] = useState(null);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -77,6 +75,8 @@ export default function Step5() {
       },
     };
 
+
+
     mutate(payload, {
       onSuccess: (res) => {
         notifySuccess(res?.message);
@@ -84,27 +84,34 @@ export default function Step5() {
           res.response?.data?.message || "Registration successful!"
         );
 
+
+
         const didFull = res.data?.didId; // did:sludi:200131161875
         const shortDid = didFull?.split(":")[2]; // 200131161875
 
-        //console.log(didFull);
+
+
 
         setRegistrationId(didFull);
         setIsRegistering(true);
         setRegistrationComplete(true);
 
         // Now call credential API automatically
-        generateCredential.mutate(shortDid, {
-          onSuccess: () => {
-            // console.log("Credential Response:", credRes);
-            notifySuccess(res?.message);
-            message.success("Credential generated successfully!");
-          },
-          onError: (err) => {
-            notifyError(err?.response?.data?.message);
-            message.error("Credential generation failed");
-          },
-        });
+        if (shortDid) {
+          generateCredentialMutate(shortDid, {
+            onSuccess: (credRes) => {
+              notifySuccess("Credential generated successfully!");
+              message.success("Credential generated successfully!");
+            },
+            onError: (err) => {
+              notifyError(err?.response?.data?.message || "Credential generation failed");
+              message.error("Credential generation failed");
+            },
+          });
+        } else {
+          notifyError("Failed to extract DID from registration response");
+          message.error("Failed to extract DID from registration response");
+        }
 
         // Clear biometric storage
         setTimeout(() => {
