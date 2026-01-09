@@ -24,6 +24,7 @@ import {
 import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { useNavigate } from "react-router-dom";
 
+
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("users");
   const [showCreateUser, setShowCreateUser] = useState(false);
@@ -137,9 +138,8 @@ const AdminPanel = () => {
 
   const Sidebar = () => (
     <div
-      className={`bg-background text-white transition-all duration-300 ${
-        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-      } fixed lg:relative lg:translate-x-0 z-30 w-64 h-full`}
+      className={`bg-background text-white transition-all duration-300 ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } fixed lg:relative lg:translate-x-0 z-30 w-64 h-full`}
     >
       <div className="p-6">
         <div className="flex items-center justify-center">
@@ -162,11 +162,10 @@ const AdminPanel = () => {
         <div className="px-6">
           <button
             onClick={() => setActiveTab("users")}
-            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${
-              activeTab === "users"
-                ? "bg-primary text-white"
-                : "text-gray-300 hover:bg-gray-700"
-            }`}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${activeTab === "users"
+              ? "bg-primary text-white"
+              : "text-gray-300 hover:bg-gray-700"
+              }`}
           >
             <Users className="w-5 h-5" />
             <span className="t-16">User Management</span>
@@ -174,11 +173,10 @@ const AdminPanel = () => {
 
           <button
             onClick={() => setActiveTab("settings")}
-            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all mt-2 ${
-              activeTab === "settings"
-                ? "bg-primary text-white"
-                : "text-gray-300 hover:bg-gray-700"
-            }`}
+            className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all mt-2 ${activeTab === "settings"
+              ? "bg-primary text-white"
+              : "text-gray-300 hover:bg-gray-700"
+              }`}
           >
             <Settings className="w-5 h-5" />
             <span className="t-16">Settings</span>
@@ -429,11 +427,10 @@ const AdminPanel = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span
-                                className={`inline-flex px-2 py-1 t-14 font-medium rounded-full ${
-                                  user.status === "active"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                                }`}
+                                className={`inline-flex px-2 py-1 t-14 font-medium rounded-full ${user.status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                                  }`}
                               >
                                 {user.status}
                               </span>

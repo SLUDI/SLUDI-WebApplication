@@ -14,6 +14,7 @@ import LogoSmallImage from "../../assets/images/LogoSmallImage";
 import { useDispatch, useSelector } from "react-redux";
 import { RiPassPendingLine } from "react-icons/ri";
 import { MdOutlineLibraryBooks } from "react-icons/md";
+import { MdOutlineShield } from "react-icons/md";
 import MainButton from "../../components/baseComponents/button/MainButton";
 import { CiLogout } from "react-icons/ci";
 import { logOut } from "../../redux/authSlice";
@@ -251,10 +252,10 @@ export default function MainLayout() {
       key: "4",
       icon: (
         <RiPassPendingLine
-          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "1" ? "bg-colorTextSelected" : "bg-transparent"
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "4" ? "bg-colorTextSelected" : "bg-transparent"
             }`}
           color={
-            selecteKey === "1"
+            selecteKey === "4"
               ? "var(--color-selected)"
               : "var(--color-non-selected)"
           }
@@ -262,6 +263,22 @@ export default function MainLayout() {
       ),
       label: "Pending Reqest",
       route: "/pendingIssue",
+    },
+    {
+      key: "6",
+      icon: (
+        <MdOutlineShield
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "6" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
+          color={
+            selecteKey === "6"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Deepfake Logs",
+      route: "/deepfakeLogs",
     },
   ];
 
