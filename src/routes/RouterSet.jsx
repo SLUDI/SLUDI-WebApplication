@@ -19,7 +19,7 @@ import LicenseIssuanceForm from "../pages/InitialReqqust/LicenseIssuanceForm";
 import PendingRequest from "../pages/InitialReqqust/pendingRequest";
 import IssuedLicense from "../pages/InitialReqqust/issuedLicense";
 import OrganizationUser from "../pages/OrganizationUsers/organizationUser";
-import DeepfakeLogsTab from "../pages/AdminiPanel/DeepfakeLogsTab";
+import DeepfakeLogsTab from "../pages/DeepFakeDetectionLogs/DeepfakeLogs";
 import { useSelector } from "react-redux";
 
 export default function RouterSet() {
