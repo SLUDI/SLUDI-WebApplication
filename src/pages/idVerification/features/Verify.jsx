@@ -115,10 +115,15 @@ export default function Verify({ open, onCancel, user }) {
             <div className="flex flex-col w-full">
               <Text className="t-16 text-black font-medium">Gender :</Text>
               <Input
-                value={user?.gender}
+                value={
+                  user?.gender
+                    ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1).toLowerCase()
+                    : ""
+                }
                 readOnly
                 className="text-black text-sm"
               />
+
             </div>
           </div>
 
@@ -150,13 +155,12 @@ export default function Verify({ open, onCancel, user }) {
                 Appoinment date :
               </Text>
               <div className="w-full flex flex-row gap-10">
-                <Form.Item name="date" className="w-full">
-                  <Input
-                    value={user?.appointmentDate}
-                    readOnly
-                    className="text-black text-sm"
-                  />
-                </Form.Item>
+                <Input
+                  value={user?.appointmentDate}
+                  readOnly
+                  className="text-black text-sm"
+                />
+
               </div>
             </div>
           </div>
