@@ -179,6 +179,22 @@ export default function MainLayout() {
       ),
       route: "/permission",
     },
+    {
+      key: "7",
+      icon: (
+        <MdOutlineShield
+          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "6" ? "bg-colorTextSelected" : "bg-transparent"
+            }`}
+          color={
+            selecteKey === "6"
+              ? "var(--color-selected)"
+              : "var(--color-non-selected)"
+          }
+        />
+      ),
+      label: "Deepfake Logs",
+      route: "/deepfakeLogs",
+    },
     // {
     //   key: "7",
     //   label: "Face Verification",
@@ -263,22 +279,6 @@ export default function MainLayout() {
       ),
       label: "Pending Reqest",
       route: "/pendingIssue",
-    },
-    {
-      key: "6",
-      icon: (
-        <MdOutlineShield
-          className={`w-[32px] h-[32px] rounded-full p-1 ${selecteKey === "6" ? "bg-colorTextSelected" : "bg-transparent"
-            }`}
-          color={
-            selecteKey === "6"
-              ? "var(--color-selected)"
-              : "var(--color-non-selected)"
-          }
-        />
-      ),
-      label: "Deepfake Logs",
-      route: "/deepfakeLogs",
     },
   ];
 
