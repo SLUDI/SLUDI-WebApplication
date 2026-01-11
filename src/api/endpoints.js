@@ -27,6 +27,9 @@ const endpoints = {
   CHANGE_LICENSE_IMAGE_STATUS: "/api/vc/photo",
   LICENSE_COUNT: "/api/vc/driving-license/stats",
   FACE_VERIFICATION: "/api/wallet/verify-identity",
+  DEEPFAKE_LOGS: "/api/deepfake/logs",
+  DEEPFAKE_STATS: "/api/deepfake/logs/stats",
 };
 
 export default endpoints;
+

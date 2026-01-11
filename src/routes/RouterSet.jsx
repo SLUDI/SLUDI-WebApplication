@@ -19,6 +19,7 @@ import LicenseIssuanceForm from "../pages/InitialReqqust/LicenseIssuanceForm";
 import PendingRequest from "../pages/InitialReqqust/pendingRequest";
 import IssuedLicense from "../pages/InitialReqqust/issuedLicense";
 import OrganizationUser from "../pages/OrganizationUsers/organizationUser";
+import DeepfakeLogsTab from "../pages/AdminiPanel/DeepfakeLogsTab";
 import { useSelector } from "react-redux";
 
 export default function RouterSet() {
@@ -48,6 +49,7 @@ export default function RouterSet() {
           <Route path="pendingIssue" element={<PendingRequest />} />
           <Route path="issuedLicenses" element={<IssuedLicense />} />
           <Route path="organizationUser" element={<OrganizationUser />} />
+          <Route path="deepfakeLogs" element={<DeepfakeLogsTab />} />
         </Route>
       ) : (
         <Route path="*" element={<Navigate to="/sign-in" />} />
