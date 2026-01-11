@@ -138,8 +138,11 @@ const DigitalIdentityForm = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <Sllogo className="h-16 md:h-20" />
+          <div className="flex justify-center items-center mb-6">
+            <Sllogo
+              size="xl"
+              className="w-82 h-24 justify-center items-center spin-vertical"
+            />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Digital Identity Registration
@@ -548,12 +551,12 @@ const DigitalIdentityForm = () => {
                         getValueFromEvent={(e) =>
                           Array.isArray(e) ? e : e && e.fileList
                         }
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Please upload NIC front side",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload NIC front side",
+                      //   },
+                      // ]}
                       >
                         <Upload
                           beforeUpload={() => false}
@@ -572,12 +575,12 @@ const DigitalIdentityForm = () => {
                         getValueFromEvent={(e) =>
                           Array.isArray(e) ? e : e && e.fileList
                         }
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Please upload NIC back side",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload NIC back side",
+                      //   },
+                      // ]}
                       >
                         <Upload
                           beforeUpload={() => false}
@@ -604,12 +607,12 @@ const DigitalIdentityForm = () => {
                         getValueFromEvent={(e) =>
                           Array.isArray(e) ? e : e && e.fileList
                         }
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Please upload Birth Certificate front",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload Birth Certificate front",
+                      //   },
+                      // ]}
                       >
                         <Upload
                           beforeUpload={() => false}
@@ -631,12 +634,12 @@ const DigitalIdentityForm = () => {
                         getValueFromEvent={(e) =>
                           Array.isArray(e) ? e : e && e.fileList
                         }
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Please upload Birth Certificate back",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload Birth Certificate back",
+                      //   },
+                      // ]}
                       >
                         <Upload
                           beforeUpload={() => false}
@@ -664,12 +667,12 @@ const DigitalIdentityForm = () => {
                         getValueFromEvent={(e) =>
                           Array.isArray(e) ? e : e && e.fileList
                         }
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Please upload Birth Certificate front",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please upload Birth Certificate front",
+                      //   },
+                      // ]}
                       >
                         <Upload
                           beforeUpload={() => false}
