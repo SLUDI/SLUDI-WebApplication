@@ -22,7 +22,7 @@ import {
     SafetyCertificateOutlined,
     ReloadOutlined,
 } from "@ant-design/icons";
-import { useDeepfakeLogs, useDeepfakeStats } from "../../services/deepfakeLogService";
+import { useDeepfakeLogs, useDeepfakeStats } from "../../services/deepFakeLog/deepfakeLogService";
 
 const DeepfakeLogsTab = () => {
     const [currentPage, setCurrentPage] = useState(0);
