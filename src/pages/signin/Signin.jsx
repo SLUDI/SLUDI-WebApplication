@@ -233,19 +233,22 @@ const Signin = () => {
             <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="flex justify-center items-center">
-          <Sllogo className="w-40 h-40 justify-center items-center spin-vertical" />
+        <div className="flex justify-center items-center mb-6">
+          <Sllogo
+            size="xl"
+            className="w-82 h-24 justify-center items-center spin-vertical"
+          />
         </div>
 
         <Form className="space-y-6 w-full" onFinish={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
+              Email or User Name
             </label>
             <Form.Item
               name="usernameOrEmail"
               rules={[
-                { required: true, message: "Please enter email address" },
+                { required: true, message: "Please enter email or username" },
               ]}
             >
               <Input placeholder="Text field data" size="large" />

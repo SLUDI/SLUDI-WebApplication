@@ -71,8 +71,8 @@ export const registerCitizen = async (data) => {
         const documentTypes = [
           "NIC",
           "NIC",
-          "birthCertificate",
-          "birthCertificate",
+          "BirthCertificate",
+          "BirthCertificate",
         ];
         const documentSides = ["Front", "Back", "Front", "Back"];
 
